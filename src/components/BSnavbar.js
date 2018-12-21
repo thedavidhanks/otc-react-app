@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Row, Col, Image, Navbar, Nav, MenuItem, NavItem, NavDropdown } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 import Logo from '../img/logotoc.png';
 
 class BSnavbar extends Component {
@@ -20,35 +20,32 @@ class BSnavbar extends Component {
 
   render() {
     return (
-        <Row>
-            <Col md={12} className='navbar-wrapper'>
-              <Navbar inverse collapseOnSelect fluid className='navbar'>
-                <Navbar.Header>
-                    <a href="/"><Image src={Logo}/></a>
-                    <Navbar.Toggle />
-                </Navbar.Header>
-                <Navbar.Collapse>
-                  <Nav activeKey={this.state.activeKey} onSelect={this.handleSelect} className='nav-menu'>
-                    <NavItem eventKey={1} href="/projects">
-                      Projects
-                    </NavItem>
-                    <NavItem eventKey={2} href="/rigs">
-                      Rigs
-                    </NavItem>
-                    <NavDropdown eventKey={3} title="Tools" id="basic-nav-dropdown">
-                      <MenuItem eventKey={3.1} href='/tools/shearcalc'>Shear Calculator</MenuItem>
-                      <MenuItem eventKey={3.2} href='/tools/accumcalc'>Accumulator Calculator</MenuItem>
-                    </NavDropdown>
-                  </Nav>
-                  <Nav pullRight>
-                    <NavItem eventKey={2}>
-                      Login
-                    </NavItem>
-                  </Nav>
-                </Navbar.Collapse>
-              </Navbar>
-            </Col>
-        </Row>
+            <div className="navbar navbar-expand-md navbar-dark bg-dark fixed-top row">
+                <a className="navbar-brand" href="/"><img src={Logo} alt="otc-logo"/></a>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse">
+                    <ul className="navbar-nav mr-auto">
+                      <li className="nav-item">
+                        <NavLink className="nav-link" to="/projects" activeClassName="active">Projects <span className="sr-only">(current)</span></NavLink>
+                      </li>
+                      <li className="nav-item">
+                        <NavLink className="nav-link" to="/rigs" activeClassName="active">Rigs</NavLink>
+                      </li>
+                      <li className="nav-item dropdown">
+                        <NavLink className="nav-link dropdown-toggle" to="/tools" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" rel="noreferrer" activeClassName="active">Tools</NavLink>
+                        <div className="dropdown-menu" aria-labelledby="dropdown01">
+                          <NavLink className="dropdown-item" to="/tools/shearcalc" activeClassName="active">Shear Calculator</NavLink>
+                          <NavLink className="dropdown-item" to="/tools/accumcalc" activeClassName="active">Accumulator Calculator</NavLink>
+                        </div>
+                      </li>
+                    </ul>
+                    <div className=" my-2 my-lg-0">
+                      <button className="btn btn-outline-primary my-2 my-sm-0" type="submit">Login</button>
+                    </div>
+                </div>
+            </div>
     );
   }
 };
