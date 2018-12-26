@@ -8,17 +8,16 @@ import './App.css';
 import BSnavbar from './components/BSnavbar';
 
 class App extends Component {
-  
-  constructor(){
-      super();
-      this.login = this.login.bind(this);
-      this.logout = this.logout.bind(this);
-      
-      this.state = {
-          username: '',
-          user: null
-      };
-  }
+    constructor(){
+        super();
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
+
+        this.state = {
+            username: '',
+            user: null
+        };
+    }
     logout(){
         console.log('logout'+this.state.user);
 
@@ -48,7 +47,10 @@ class App extends Component {
                     <Route path='/' exact component={Home} />
                     <Route path='/projects' component={Projects} />
                     <Route path='/rigs' component={Rigs} />
-                    <Route path='/tools/shearcalc' component={ShearCalc} />
+                    <Route 
+                        path='/tools/shearcalc'
+                        render={() => <ShearCalc user={this.state.user} />} 
+                    />
                     <Route path='/tools/accumcalc' component={AccumCalc} />
                 </div>
         </div>
@@ -67,7 +69,15 @@ class App extends Component {
 const Home = () => <h3>Home</h3>;
 const Projects = () => <h3>Projects</h3>;
 const Rigs = () => <h3>Rigs</h3>;
-const ShearCalc = () => <h3>Shear Calculator</h3>;
 const AccumCalc = () => <h3>Accumulator Calculator</h3>;
+class ShearCalc extends Component {
+    render(){
+        return(
+                <div>
+                {this.props.user ? <h3>Shear Calculator</h3> : <h3>Login required to view this page</h3>}
+                </div>
+        );
+    }
+};
 
 export default App;
