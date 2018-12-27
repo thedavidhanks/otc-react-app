@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { auth, provider } from './firebase.js'
 import './App.css';
-
-//import { Grid, Row, Col } from 'react-bootstrap';
-//import NavigationHeader from './components/NavigationHeader';
 import BSnavbar from './components/BSnavbar';
 
 class App extends Component {

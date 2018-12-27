@@ -1,11 +1,12 @@
 import firebase from 'firebase'
+
+const apikey = process.env.REACT_APP_FIREBASE_API;
 const config = {
-    apiKey: "AIzaSyBIZVPXETuWER6Ohb_ol07IEiCbGzHhT88",
+    apiKey: apikey,
     authDomain: "otc-react-app.firebaseapp.com",
     databaseURL: "https://otc-react-app.firebaseapp.com",
     projectId: "otc-react-app",
-    storageBucket: "otc-react-app.firebaseapp.com",
-    messagingSenderId: "144750278413"
+    storageBucket: "otc-react-app.firebaseapp.com"
 };
 firebase.initializeApp(config);
 
