@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { auth, provider } from './firebase.js'
 import './App.css';
 import BSnavbar from './components/BSnavbar';
+import Rigs from './components/Rigs.js';
 
 class App extends Component {
     constructor(){
@@ -60,12 +61,10 @@ class App extends Component {
                 this.setState({user});
             }
         });
-        console.log('user is '+this.state.user);
     }
 }
 const Home = () => <h3>Home</h3>;
 const Projects = () => <h3>Projects</h3>;
-const Rigs = () => <h3>Rigs</h3>;
 const AccumCalc = () => <h3>Accumulator Calculator</h3>;
 class ShearCalc extends Component {
     render(){
