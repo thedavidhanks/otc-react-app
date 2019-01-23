@@ -3,25 +3,14 @@ import IconSort from '../img/icons/baseline-sort-24px.svg';
 import IconFilter from '../img/icons/baseline-filter_list-24px.svg';
 import IconEdit from '../img/icons/baseline-edit-24px.svg';
 import IconAdd from '../img/icons/baseline-add-24px.svg';
+import ModalAddRig from './ModalAddRig.js';
 //icons from https://material.io/tools/icons/?style=baseline
 
 class Rigs extends Component {
     render(){
         return (
             <div className='col-sm'>
-                <div className="modal fade modal-add-rig" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-lg">
-                      <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Add Rig</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        Rig form here.
-                      </div>
-                    </div>
-                  </div>
+                <ModalAddRig />
                 <div className='container'>
                     <div className='row'><h2 className='col'>Rigs</h2></div>
                     <div className='row'>

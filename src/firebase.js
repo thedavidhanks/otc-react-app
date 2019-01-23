@@ -4,9 +4,10 @@ const apikey = process.env.REACT_APP_FIREBASE_API;
 const config = {
     apiKey: apikey,
     authDomain: "otc-react-app.firebaseapp.com",
-    databaseURL: "https://otc-react-app.firebaseapp.com",
+    databaseURL: "https://otc-react-app.firebaseio.com",
     projectId: "otc-react-app",
-    storageBucket: "otc-react-app.firebaseapp.com"
+    storageBucket: "otc-react-app.appspot.com",
+    messagingSenderId: "911289607073"
 };
 firebase.initializeApp(config);
 
