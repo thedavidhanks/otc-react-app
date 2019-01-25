@@ -4,6 +4,7 @@ import { auth, provider } from './firebase.js'
 import './App.css';
 import BSnavbar from './components/BSnavbar';
 import Rigs from './components/Rigs.js';
+import ShearCalculator from './components/ShearCalculator.js'
 
 class App extends Component {
     constructor(){
@@ -36,25 +37,25 @@ class App extends Component {
                     });
         });
     }  
-  render(){
-    return (
-        <Router>
-        <div className="container">
-            <BSnavbar user={this.state.user} login={this.login} logout={this.logout}/>
-                <div role="main" className="row">
-                    <Route path='/' exact component={Home} />
-                    <Route path='/projects' component={Projects} />
-                    <Route path='/rigs' component={Rigs} />
-                    <Route 
-                        path='/tools/shearcalc'
-                        render={() => <ShearCalc user={this.state.user} />} 
-                    />
-                    <Route path='/tools/accumcalc' component={AccumCalc} />
-                </div>
-        </div>
-        </Router>
-    );
-  }
+    render(){
+      return (
+          <Router>
+          <div>
+              <BSnavbar user={this.state.user} login={this.login} logout={this.logout}/>
+              <div className="main">
+                  <Route path='/' exact component={Home} />
+                  <Route path='/projects' component={Projects} />
+                  <Route path='/rigs' component={Rigs} />
+                  <Route 
+                      path='/tools/shearcalc'
+                      render={()=><ShearCalculatorPage user={this.state.user} />}
+                  />
+                  <Route path='/tools/accumcalc' component={AccumCalc} />
+              </div>
+          </div>
+          </Router>
+      );
+    }
     componentDidMount(){
         auth.onAuthStateChanged((user)=>{
             if(user){
@@ -66,14 +67,12 @@ class App extends Component {
 const Home = () => <h3>Home</h3>;
 const Projects = () => <h3>Projects</h3>;
 const AccumCalc = () => <h3>Accumulator Calculator</h3>;
-class ShearCalc extends Component {
+class ShearCalculatorPage extends Component{
     render(){
         return(
-                <div>
-                {this.props.user ? <h3>Shear Calculator</h3> : <h3>Login required to view this page</h3>}
-                </div>
-        );
-    }
-};
-
+        <div>
+            {this.props.user ? <ShearCalculator  user={this.props.user} /> : <h3>Login required to view this page</h3>}
+        </div>
+    )};
+ };
 export default App;

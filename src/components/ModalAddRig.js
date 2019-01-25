@@ -31,18 +31,18 @@ class ModalAddRig extends Component {
         db.settings({
             timestampsInSnapshots: true
         });
-        const rigRef = db.collection("rigs").add({
+        db.collection("rigs").add({
             name: this.state.name,
             owner: this.state.owner,
             commDate: this.state.commDate,
             type: this.state.type
         });
-        this.setState = {
-            name: '',
-            owner: '',
-            commDate: '',
-            type: ''
-        };
+        this.setState({
+            name: "",
+            owner: "",
+            commDate: "",
+            type: ""
+        });
         document.getElementById("addRigClose").click();
     }
     
