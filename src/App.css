@@ -34,6 +34,7 @@ navbardiv{
     margin: 10px 0px;
 }
 .panel > .heading{
+    border-radius: 10px 10px 0px 0px;
     background-color: #DDD;
     border-bottom: 1px;
     text-align: center;
