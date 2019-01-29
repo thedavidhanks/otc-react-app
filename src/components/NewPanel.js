@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 
 class NewPanel extends Component{
-    constructor(props){
-        super(props);
-    }    
     render(){
         return(
             <div className="panel">
