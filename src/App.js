@@ -4,7 +4,9 @@ import { auth, provider } from './firebase.js'
 import './App.css';
 import BSnavbar from './components/BSnavbar';
 import Rigs from './components/Rigs.js';
-import ShearCalculator from './components/ShearCalculator.js'
+import Projects from './components/Projects.js';
+import ShearCalculator from './components/ShearCalculator.js';
+import Tools from './components/Tools.js';
 
 class App extends Component {
     constructor(){
@@ -43,14 +45,18 @@ class App extends Component {
           <div>
               <BSnavbar user={this.state.user} login={this.login} logout={this.logout}/>
               <div className="main">
-                  <Route path='/' exact component={Home} />
-                  <Route path='/projects' component={Projects} />
-                  <Route path='/rigs' component={Rigs} />
-                  <Route 
-                      path='/tools/shearcalc'
-                      render={()=><ShearCalculatorPage user={this.state.user} />}
-                  />
-                  <Route path='/tools/accumcalc' component={AccumCalc} />
+                    <Route path='/' exact component={Home} />
+                    <Route path='/projects' component={Projects} />
+                    <Route path='/rigs' component={Rigs} />
+                    <Route
+                        exact path ='/tools'
+                        render={()=><Tools user={this.state.user} />}
+                    />
+                    <Route 
+                        path='/tools/shearcalc'
+                        render={()=><ShearCalculatorPage user={this.state.user} />}
+                    />
+                    <Route path='/tools/accumcalc' component={AccumCalc} />
               </div>
           </div>
           </Router>
@@ -65,7 +71,6 @@ class App extends Component {
     }
 }
 const Home = () => <h3>Home</h3>;
-const Projects = () => <h3>Projects</h3>;
 const AccumCalc = () => <h3>Accumulator Calculator</h3>;
 class ShearCalculatorPage extends Component{
     render(){

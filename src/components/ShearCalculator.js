@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, ButtonToolbar, Button } from 'react-bootstrap';
+import { Container, Row, Col, ButtonToolbar, Button } from 'react-bootstrap';
 //import ShearLinesTable from './ShearLinesTable.js';
 import NewPanel from './NewPanel.js';
 
 class ShearCalculator extends Component{
     render(){
         return(
-            <Grid fluid={true}>
+            <Container fluid={true}>
                 <Row>
                     <Col md={4}></Col>
                     <Col xs={12} md={4}><h4>Shear Calculator.</h4></Col>
@@ -28,7 +28,7 @@ class ShearCalculator extends Component{
                     outputs
                     </Col>
                 </Row>
-            </Grid>
+            </Container>
     )};
 };
 
