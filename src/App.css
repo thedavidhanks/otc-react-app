@@ -24,26 +24,13 @@ navbardiv{
 .show-border{
     border: solid 1px;
 }
+.show-border-red{
+    border: solid red 1px;
+}
 .main{
     margin: 10px 0px;
 }
-.panel{
-    border: 1px solid grey;
-    border-radius: 10px;
-    padding: 0px;
-    margin: 10px 0px;
-}
-.panel > .heading{
-    border-radius: 10px 10px 0px 0px;
-    background-color: #DDD;
-    border-bottom: 1px;
-    text-align: center;
-    font-size: large;
-    padding: 5px;
-}
-.panel-body{
-    padding: 5px;
-}
+
 body { 
     padding-top: 90px;
     margin: 0px;

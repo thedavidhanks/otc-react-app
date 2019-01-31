@@ -21,6 +21,7 @@ class BSnavbar extends Component {
                         <li className="nav-item dropdown">
                           <NavLink className="nav-link dropdown-toggle" to="/tools" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" rel="noreferrer" activeClassName="active">Tools</NavLink>
                           <div className="dropdown-menu" aria-labelledby="dropdown01">
+                            <NavLink className="dropdown-item" to="/tools/gascalc" activeClassName="active">Gas Calculator</NavLink>                    
                             <NavLink className="dropdown-item" to="/tools/shearcalc" activeClassName="active">Shear Calculator</NavLink>
                             <NavLink className="dropdown-item" to="/tools/accumcalc" activeClassName="active">Accumulator Calculator</NavLink>
                           </div>

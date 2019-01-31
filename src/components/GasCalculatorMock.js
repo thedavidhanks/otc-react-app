@@ -3,17 +3,17 @@ import Image from 'react-bootstrap/Image';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import MockProjects from '../img/mock/jobs.png';
+import MockGasCalculator from '../img/mock/SimpleGasModule.png';
 
-class Projects extends Component {
+class GasCalculatorMock extends Component {
     render(){
         return (
             <Container fluid='true'>
-                <Row><Col /><Col xs={12} md={6}><h4>Projects</h4></Col><Col /></Row>
-                <Row style={{marginTop: '20px'}} ><Col /><Col md={6}><Image src={MockProjects} /></Col><Col /></Row>
+                <Row><Col /><Col xs={12} md={6}><h4>Gas Calculator</h4></Col><Col /></Row>
+                <Row><Col /><Col md={6}><Image src={MockGasCalculator} /></Col><Col /></Row>
             </Container>
       );
     }
 };
 
-export default Projects;
+export default GasCalculatorMock;

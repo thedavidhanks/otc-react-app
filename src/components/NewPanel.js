@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import Card from 'react-bootstrap/Card';
 
 class NewPanel extends Component{
     render(){
         return(
-            <div className="panel">
-                <div className="heading">{this.props.title}</div>
-                <div className="panel-body">
+            <Card>
+                <Card.Title>{this.props.title}</Card.Title>
+                <Card.Text>
                 {this.props.children}
-                </div>
-            </div>
+                </Card.Text>
+            </Card>
     );}
 };
 
