@@ -4,12 +4,10 @@ import Card from 'react-bootstrap/Card';
 class NewPanel extends Component{
     render(){
         return(
-            <Card>
-                <Card.Title>{this.props.title}</Card.Title>
-                <Card.Text>
-                {this.props.children}
-                </Card.Text>
-            </Card>
+            <div>
+                <h4>{this.props.title}</h4>
+                <div>{this.props.children}</div>
+            </div>
     );}
 };
 

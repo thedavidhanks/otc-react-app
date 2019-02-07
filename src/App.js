@@ -82,6 +82,7 @@ class ShearCalculatorPage extends Component{
         <div>
             {this.props.user ? <ShearCalculator  user={this.props.user} /> : <h4>Login required to view this page</h4>}
         </div>
-    )};
+        );
+    };
  };
 export default App;

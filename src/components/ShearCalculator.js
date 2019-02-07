@@ -1,12 +1,78 @@
 import React, { Component } from 'react';
-import { ButtonToolbar, Button } from 'react-bootstrap';
+import { ButtonToolbar, Button, Table } from 'react-bootstrap';
+import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form'
 import NewPanel from './NewPanel.js';
 
+function createPipeRows(Obj){
+    var pipeRows = [];
+    for (var pipe in Obj){
+        pipeRows.push(<tr key={pipe}><td>{pipe}</td><td>{Obj[pipe].strength}</td><td>{Obj[pipe].OD}</td><td>{Obj[pipe].wall}</td></tr>);
+    }
+    return pipeRows;
+}
 class ShearCalculator extends Component{
+    constructor(props){
+        super(props);
+        this.changeStrength = this.changeStrength.bind(this);
+        this.state = {
+            pipes: {
+                1: {
+                type: 'pipe',
+                OD: 5,
+                wall: 0.25,
+                ppf: 19.5,
+                strType: 'yield',
+                strength: 130},
+                2: {
+                type: 'pipe',
+                OD: 4.5,
+                wall: 0.2,
+                ppf: 10.5,
+                strType: 'yield',
+                strength: 130}        
+            },
+            strUnits: 'ksi'
+        };
+    };
+    changeStrength(event){
+        switch(event.target.value){
+            case 'grade':
+                this.setState({strUnits: ''});
+                break;
+            case 'breaking':
+                this.setState({strUnits: 'kips'});
+                break;
+            default:
+            case 'yield':
+                this.setState({strUnits: 'ksi'});
+                break;
+        }
+    };
     render(){
+        let pipeTblHeader;
+        var pipeRows;
+        var pipesObj = this.state.pipes;
+        if(pipesObj){
+            pipeRows = createPipeRows(pipesObj);
+            pipeTblHeader = (
+                <Table striped hover>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Eval Str</th>
+                      <th>OD</th>
+                      <th>Size</th>
+                    </tr>
+                  </thead>
+                    <tbody>
+                        {pipeRows}
+                    </tbody>
+                </Table>
+            );
+        }
         return(
             <Container fluid={true}>
                 <Row>
@@ -21,17 +87,81 @@ class ShearCalculator extends Component{
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12} md={9} >
-                        <NewPanel title="Shearables">Here's text for the Shearable stuff</NewPanel>
-                        <NewPanel title="Well Conditions">x,y,z</NewPanel>
-                        <NewPanel title="Rig Properties"><div><p>here's some text about rig properties</p><p>blah. blah. blah.</p></div></NewPanel>
+                    <Col xs={12} md={8} >
+                    <NewPanel title="Shearables">
+                        <Form>
+                            <Form.Group as={Row} controlId="tubeType">
+                                <Col sm="2"><Form.Label>Type</Form.Label></Col>
+                                <Col sm="8">
+                                    <Form.Control as="select">
+                                        <option>pipe</option>                        
+                                        <option>casing</option>
+                                        <option>tube</option>
+                                        <option>wireline</option>
+                                        <option>slickline</option>
+                                        <option>e-line</option>
+                                        <option>combo</option>
+                                    </Form.Control>
+                                </Col>
+                                <Col />
+                            </Form.Group>
+                            <Row>
+                                <Col sm="2">
+                                <Form.Group controlId="strengthType">
+                                    <Form.Control as="select" onChange={this.changeStrength}>
+                                        <option value="yield">Yield Strength</option>                        
+                                        <option value="grade">Grade</option>
+                                        <option value="breaking">Breaking Strength</option>                        
+                                    </Form.Control>
+                                </Form.Group>
+                                </Col>
+                                <Col sm="8">                    
+                                    <Form.Group controlId="Strength">
+                                        <Form.Control type="text"/>
+                                    </Form.Group>
+                                </Col>
+                                <Col sm="2">{this.state.strUnits}</Col>
+                            </Row>
+                            <Form.Group as={Row} controlId="elongation">
+                                <Form.Label column sm="2">Elongation</Form.Label>
+                                <Col sm="8">
+                                <Form.Control type="text" />
+                                </Col>
+                                <Col sm="2">%</Col>
+                            </Form.Group>
+                            <Row>
+                                <Col sm="2">
+                                <Form.Group controlId="weightType">
+                                    <Form.Control as="select">
+                                        <option>Weight</option>                        
+                                        <option>Wall thickness</option>                 
+                                    </Form.Control>
+                                </Form.Group>
+                                </Col>
+                                <Col sm="8">                    
+                                    <Form.Group controlId="weight">
+                                        <Form.Control type="text" />
+                                    </Form.Group>
+                                </Col>
+                                <Col sm="2">ksi</Col>
+                            </Row>
+                            <Row>
+                            <Col md="4"/>
+                            <Col md="4"><Button className="Primary">Add</Button></Col>
+                            <Col md="4"/>
+                            </Row>
+                        </Form>
+                    </NewPanel>
+                    <NewPanel title="Well Conditions">x,y,z</NewPanel>
+                    <NewPanel title="Rig Properties"><div>here's some text about rig properties</div><div>blah. blah. blah.</div></NewPanel>
                     </Col>
-                    <Col md={3}>
-                            <NewPanel title='Results'>a,b,c</NewPanel>
+                    <Col md={4}>
+                    <NewPanel title="Pipe to Evaluate">{pipeTblHeader}</NewPanel>
                     </Col>
                 </Row>
             </Container>
-    )};
+    );
+    };
 };
 
 export default ShearCalculator;
