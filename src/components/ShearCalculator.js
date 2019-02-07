@@ -9,7 +9,7 @@ import NewPanel from './NewPanel.js';
 function createPipeRows(Obj){
     var pipeRows = [];
     for (var pipe in Obj){
-        pipeRows.push(<tr key={pipe}><td>{pipe}</td><td>{Obj[pipe].strength}</td><td>{Obj[pipe].OD}</td><td>{Obj[pipe].wall}</td></tr>);
+        pipeRows.push(<tr key={Obj[pipe].id}><td>{Obj[pipe].id}</td><td>{Obj[pipe].strength}</td><td>{Obj[pipe].OD}</td><td>{Obj[pipe].wall}</td></tr>);
     }
     return pipeRows;
 }
@@ -17,25 +17,31 @@ class ShearCalculator extends Component{
     constructor(props){
         super(props);
         this.changeStrength = this.changeStrength.bind(this);
+        this.updateStrengthValue = this.updateStrengthValue.bind(this);
+        this.addShearable = this.addShearable.bind(this);
         this.state = {
-            pipes: {
-                1: {
+            strUnits: 'ksi',
+            strength: ''
+        };
+        this.state.pipes = [
+            {
+                id: 1,
                 type: 'pipe',
                 OD: 5,
                 wall: 0.25,
                 ppf: 19.5,
                 strType: 'yield',
-                strength: 130},
-                2: {
+                strength: 130
+            },{
+                id: 2,
                 type: 'pipe',
                 OD: 4.5,
                 wall: 0.2,
                 ppf: 10.5,
                 strType: 'yield',
-                strength: 130}        
-            },
-            strUnits: 'ksi'
-        };
+                strength: 130
+            }        
+        ];
     };
     changeStrength(event){
         switch(event.target.value){
@@ -51,6 +57,13 @@ class ShearCalculator extends Component{
                 break;
         }
     };
+    addShearable(event){
+        event.preventDefault();
+        console.log("strength: "+ this.state.strength);
+    }
+    updateStrengthValue(e){
+        this.setState({strength: e.target.value});
+    }
     render(){
         let pipeTblHeader;
         var pipeRows;
@@ -117,7 +130,7 @@ class ShearCalculator extends Component{
                                 </Col>
                                 <Col sm="8">                    
                                     <Form.Group controlId="Strength">
-                                        <Form.Control type="text"/>
+                                        <Form.Control type="text" value={this.state.strength} onChange={this.updateStrengthValue}/>
                                     </Form.Group>
                                 </Col>
                                 <Col sm="2">{this.state.strUnits}</Col>
@@ -147,7 +160,7 @@ class ShearCalculator extends Component{
                             </Row>
                             <Row>
                             <Col md="4"/>
-                            <Col md="4"><Button className="Primary">Add</Button></Col>
+                            <Col md="4"><Button variant="primary" type="submit" onClick={this.addShearable}>Add</Button></Col>
                             <Col md="4"/>
                             </Row>
                         </Form>

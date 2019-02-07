@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Card, CardColumns, Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import CardColumns from 'react-bootstrap/CardColumns';
 import IconGas from '../img/icons/gasCalculator.png';
 
 class Tools extends Component {
