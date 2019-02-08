@@ -1,0 +1,50 @@
+In-line styling
+
+    <Row style={{marginTop: '20px' }} >
+
+In-line arrow function is more concise than a separate one-use, single-line function.
+
+    <Form.Control type="text" value={this.state.strength} onChange={(e) => this.setState({strength: e.target.value})}/>
+
+When key and value are the same they can be combined
+    use this format:
+    var strengthType = event.target.value;
+    this.setState({strengthType}); 
+
+    instead of: 
+    var strengthType = event.target.value;
+    this.setState({strengthType: strengthType});
+
+    instead of:
+    this.setState({strengthType: event.target.value});
+
+shorthand for function and rebinding "this"
+
+    //long hand
+    constructor(props){
+        super(props);
+        this.onFormSubmit = this.onFormSubmit.bind(this);
+    }
+    onFormSubmit: function(event){
+        //do some stuff
+    }
+
+    //shorthand of above
+    constructor(props){
+        super(props);
+        this.onFormSubmit = this.onFormSubmit.bind(this);
+    }
+    onFormSubmit(event){
+        //do some stuff
+    }
+
+    //or to avoid rebinding this
+    constructor(props){
+        super(props);
+    }
+    onFormSubmit = (event) => {
+        //do some stuff
+    }
+
+    //another way to avoid rebinding is to use an arrow function from the original callback
+    <form onSubmit={ event => { //do some stuff }}

@@ -3,11 +3,15 @@
     padding-top: 10px;
     color: #fff;
 }
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
 .navbar{
     padding-top: 10px;
     margin: 0px;
 }
-navbardiv{
+.navbardiv{
     border: 1px dashed orange;
 }
 .navbar-wrapper{
@@ -16,6 +20,22 @@ navbardiv{
 }
 .nav-menu{
     
+}
+.new-panel{
+    border: 1px solid grey;
+    border-radius: 5px;
+    padding: 0px;
+    margin: 10px 0px;
+}
+.new-panel-title{
+    background-color: #D2E0E6;
+    border-bottom: 1px solid grey;
+    padding: 0px 20px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.new-panel-content{
+    margin: 10px;
 }
 .no-pad{
     padding: 0px;
@@ -40,7 +60,4 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
+

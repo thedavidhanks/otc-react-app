@@ -10,12 +10,10 @@ class Projects extends Component {
         return (
             <Container fluid='true'>
                 <Row><Col /><Col xs={12} md={6}><h4>Projects</h4></Col><Col /></Row>
-                <Row style={mockSpacing} ><Col /><Col md={6}><Image src={MockProjects} /></Col><Col /></Row>
+                <Row style={{marginTop: '20px' }} ><Col /><Col md={6}><Image src={MockProjects} /></Col><Col /></Row>
             </Container>
       );
     }
 };
-const mockSpacing = {
-    marginTop: '20px'
-};
+
 export default Projects;
