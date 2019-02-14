@@ -1,21 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class PipeRow extends Component{
-    render(){
-        const pipeObj = this.props.pipe;
-        console.log(pipeObj);
-        if(pipeObj.type === ("pipe" || "casing" || "tubing")){
-            return(
-                <tr key={pipeObj.id}>
-                    <td>{pipeObj.id}</td>
-                    <td>{pipeObj.strength}</td>
-                    <td>{pipeObj.OD}</td>
-                    <td>{pipeObj.wall}</td>
-                </tr>
-            );
+const PipeRows = props => {
+        var trimmedPipes;
+        
+        switch(props.sort){
+            case 'tube':
+                trimmedPipes = props.pipes.filter( pipe => pipe.type === "casing" || pipe.type === "pipe" || pipe.type === "tube").map( (pipe) => {
+                    return <tr key={pipe.id}><td>{pipe.id}</td><td>{pipe.strength}</td><td>{pipe.OD}</td><td>{pipe.wall}</td></tr>;
+                });
+                break;
+            case 'line':
+                trimmedPipes = props.pipes.filter( pipe => pipe.type === "wireline" || pipe.type === "eline" || pipe.type === "slickline").map( (pipe) => {
+                    return <tr key={pipe.id}><td>{pipe.id}</td><td>{pipe.strength}</td><td>{pipe.OD}</td></tr>;
+                });
+                break;
+            default:
+                trimmedPipes = <tr></tr>;
+                break;
         }
-        return <tr key={pipeObj.id}><td>{pipeObj.id}</td></tr>;
-    }
+        return <tbody>{trimmedPipes}</tbody>;
 };
 
-export default PipeRow;
+export default PipeRows;

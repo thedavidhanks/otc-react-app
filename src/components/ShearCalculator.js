@@ -5,15 +5,16 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form'
 import NewPanel from './NewPanel.js';
-import PipeRow from './PipeRow.js';
+import PipeRows from './PipeRow.js';
 
-function createPipeRows(Obj){
+/*function createPipeRows(Obj){
     var pipeRows = [];
     for(var pipe in Obj){
         pipeRows.push(<PipeRow pipe={Obj[pipe]} />);
     }
     return pipeRows;
 }
+*/
 class ShearCalculator extends Component{
     constructor(props){
         super(props);
@@ -97,10 +98,8 @@ class ShearCalculator extends Component{
     }
     render(){
         let pipeTblHeader;
-        var pipeRows;
         var pipesObj = this.state.pipes;
         if(pipesObj){
-            pipeRows = createPipeRows(pipesObj);
             pipeTblHeader = (
                 <Table striped hover>
                   <thead>
@@ -111,9 +110,7 @@ class ShearCalculator extends Component{
                       <th>Size</th>
                     </tr>
                   </thead>
-                    <tbody>
-                        {pipeRows}
-                    </tbody>
+                  <PipeRows sort="tube" pipes={pipesObj}/>
                 </Table>
             );
         }
