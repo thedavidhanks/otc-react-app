@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
-import { ButtonToolbar, Button, Table } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form'
 import NewPanel from './NewPanel.js';
-import PipeRows from './PipeRow.js';
+import PipesTable from './PipesTable.js';
 
-/*function createPipeRows(Obj){
-    var pipeRows = [];
-    for(var pipe in Obj){
-        pipeRows.push(<PipeRow pipe={Obj[pipe]} />);
-    }
-    return pipeRows;
-}
-*/
 class ShearCalculator extends Component{
     constructor(props){
         super(props);
@@ -22,10 +15,13 @@ class ShearCalculator extends Component{
             strUnits: 'ksi',
             strength: '',
             strengthType: 'yield',
+            weightType: 'wall',
             weightUnits: 'in',
             tubeType: 'pipe',
-            elongation: ''
+            elongation: '',
+            newOD: ''
         };
+        //Below is a temporary pipes object for testing.
         this.state.pipes = [
             {
                 id: 1,
@@ -57,7 +53,11 @@ class ShearCalculator extends Component{
                 OD: .75,
                 strType: 'breaking',
                 strength: 35
-            }     
+            },{
+                id: 5,
+                type: 'combo',
+                combine: [1,3]
+            }    
         ];
     };
     onStrengthChange = (event) => {
@@ -91,29 +91,67 @@ class ShearCalculator extends Component{
     }
     addShearable = (event) => {
         event.preventDefault();
-        console.log("strength: "+ this.state.strength);
+        //Do some error checking
+        
+        //create a new pipe object
+        var addNewPipe = new Object();
+        var newId = this.state.pipes.length+1;
+        switch(this.state.tubeType){
+            case 'pipe':
+            case 'tube':
+            case 'casing':
+                addNewPipe = {
+                id: newId,
+                type: this.state.tubeType,
+                OD: this.state.newOD,
+                elongation: this.state.elongation,
+                wall: 0.25,
+                ppf: 19.5,
+                strType: 'yield',
+                strength: this.state.strength
+                };
+                break;
+            case 'wireline':
+            case 'eline':
+            case 'slickline':
+                addNewPipe = {
+                id: newId,
+                type: this.state.tubeType,
+                strength: this.state.strength,
+                OD: this.state.newOD
+                };
+                break;
+            case 'combo':
+                addNewPipe = {
+                id: newId,
+                type: this.state.tubeType,
+                combine: [2,3]
+                };
+                break;
+            default:
+                break;
+        }
+        this.setState({
+            pipes: [
+                ...this.state.pipes,
+                addNewPipe
+            ],
+            strUnits: 'ksi',
+            strength: '',
+            strengthType: 'yield',
+            weightUnits: 'in',
+            tubeType: 'pipe',
+            elongation: '',
+            newOD: ''
+            
+        });
+        
+        console.log(JSON.stringify(this.state.pipes));
     }
     onFormSubmit = (e) => {
         e.preventDefault();
     }
-    render(){
-        let pipeTblHeader;
-        var pipesObj = this.state.pipes;
-        if(pipesObj){
-            pipeTblHeader = (
-                <Table striped hover>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Eval Str</th>
-                      <th>OD</th>
-                      <th>Size</th>
-                    </tr>
-                  </thead>
-                  <PipeRows sort="tube" pipes={pipesObj}/>
-                </Table>
-            );
-        }
+    render(){    
         return(
             <Container fluid={true}>
                 <Row>
@@ -167,6 +205,13 @@ class ShearCalculator extends Component{
                                 </Col>
                                 <Col sm="1">{this.state.strUnits}</Col>
                             </Row>
+                            <Form.Group as={Row} controlId="outsideDiameter">
+                                <Form.Label column sm="3">OD</Form.Label>
+                                <Col sm="8">
+                                <Form.Control type="text" value={this.state.newOD} onChange={(e) => this.setState({newOD: e.target.value})}/>
+                                </Col>
+                                <Col sm="1">in</Col>
+                            </Form.Group>
                             <Form.Group as={Row} controlId="elongation">
                                 <Form.Label column sm="3">Elongation</Form.Label>
                                 <Col sm="8">
@@ -201,7 +246,11 @@ class ShearCalculator extends Component{
                     <NewPanel title="Rig Properties"><div>here's some text about rig properties</div><div>blah. blah. blah.</div></NewPanel>
                     </Col>
                     <Col md={4}>
-                    <NewPanel title="Pipe to Evaluate">{pipeTblHeader}</NewPanel>
+                        <NewPanel title="Shearables to Evaluate">
+                            <PipesTable type="tube" pipes={this.state.pipes} />
+                            <PipesTable type="line" pipes={this.state.pipes} />
+                            <PipesTable type="combo" pipes={this.state.pipes} />
+                        </NewPanel>
                     </Col>
                 </Row>
             </Container>

@@ -14,6 +14,20 @@ const PipeRows = props => {
                     return <tr key={pipe.id}><td>{pipe.id}</td><td>{pipe.strength}</td><td>{pipe.OD}</td></tr>;
                 });
                 break;
+            case 'combo':
+                trimmedPipes = props.pipes.filter( pipe => pipe.type === "combo").map( (pipe) => {
+                    var comboDesc = "";
+                    var comboArry = pipe.combine;
+                    for(var x in comboArry){
+                      if(x === 0){
+                        comboDesc = comboArry[x].toString();
+                            }else{
+                        comboDesc += " + " + comboArry[x].toString();
+                      }
+                    }
+                    return <tr key={pipe.id}><td>{pipe.id}</td><td>{comboDesc}</td></tr>;
+                });
+                break;
             default:
                 trimmedPipes = <tr></tr>;
                 break;
