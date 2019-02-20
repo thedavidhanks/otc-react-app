@@ -8,6 +8,29 @@ import Form from 'react-bootstrap/Form'
 import NewPanel from './NewPanel.js';
 import PipesTable from './PipesTable.js';
 
+function parentTubeType(childTube){
+    var parentTube;
+    switch(childTube){
+        case 'pipe':
+        case 'tube':
+        case 'casing':
+            parentTube = 'tube';
+            break;
+        case 'wireline':
+        case 'eline':
+        case 'slickline':
+            parentTube = 'line';
+            break;
+        case 'combo':
+            parentTube = 'combo';
+            break;
+        default:
+            parentTube = null;
+            break;
+    }
+    return parentTube;
+};
+    
 class ShearCalculator extends Component{
     constructor(props){
         super(props);
@@ -19,7 +42,13 @@ class ShearCalculator extends Component{
             weightUnits: 'in',
             tubeType: 'pipe',
             elongation: '',
-            newOD: ''
+            newOD: '',
+            strengthFieldHidden: false,
+            odFieldHidden: false,
+            comboFieldHidden: true,
+            ysDisabled: false,
+            gradeDisabled: false,
+            bsDisabled: true
         };
         //Below is a temporary pipes object for testing.
         this.state.pipes = [
@@ -60,6 +89,7 @@ class ShearCalculator extends Component{
             }    
         ];
     };
+
     onStrengthChange = (event) => {
         var strengthType = event.target.value;
         this.setState({strengthType});
@@ -89,12 +119,67 @@ class ShearCalculator extends Component{
                 break;
         }
     }
+    onTubeTypeChange = (event) => {
+        //determine if type is line,tube, or combo
+        var parTubeType = parentTubeType(event.target.value);
+        this.setState( {tubeType: event.target.value});
+        
+        //console.log(tubeType);
+        switch(parTubeType){
+            case 'line':
+                //if it's a line, select breaking strength type, disable other strenghts, hide elongatioin, hide weight/wall, hide combo selection
+                this.setState({
+                   strengthFieldHidden: false,
+                   odFieldHidden: false,
+                   elongationFieldHidden: true,
+                   weightWallFieldHidden: true,
+                   comboFieldHidden: true,
+                   strengthType: 'breaking',
+                   strUnits: 'kips',
+                   ysDisabled: true,
+                   gradeDisabled: true,
+                   bsDisabled: false
+                });
+                break;
+            case 'tube':
+                //if it's a tube, disable breaking strength, select yield strength, show elongatioin, show weight/wall, hide combo selection
+                this.setState({
+                   strengthFieldHidden: false,
+                   odFieldHidden: false,
+                   elongationFieldHidden: false,
+                   weightWallFieldHidden: false,
+                   comboFieldHidden: true,
+                   strengthType: 'yield',
+                   strUnits: 'ksi',
+                   ysDisabled: false,
+                   gradeDisabled: false,
+                   bsDisabled: true,
+                   weightType: 'wall',
+                   weightUnits: 'in'
+                });
+                break;
+            case 'combo':
+                //if it's a combo, hide strengths, hide elongation, hide weight/wall, show combo selection
+                this.setState({
+                   strengthFieldHidden: true,
+                   odFieldHidden: true,
+                   elongationFieldHidden: true,
+                   weightWallFieldHidden: true,
+                   comboFieldHidden: false
+                });
+                break;
+            default:
+                break;
+        }
+       
+        
+    }
     addShearable = (event) => {
         event.preventDefault();
         //Do some error checking
         
         //create a new pipe object
-        var addNewPipe = new Object();
+        var addNewPipe = {};
         var newId = this.state.pipes.length+1;
         switch(this.state.tubeType){
             case 'pipe':
@@ -105,8 +190,8 @@ class ShearCalculator extends Component{
                 type: this.state.tubeType,
                 OD: this.state.newOD,
                 elongation: this.state.elongation,
-                wall: 0.25,
-                ppf: 19.5,
+                //wall: 0.25,
+                //ppf: 19.5,
                 strType: 'yield',
                 strength: this.state.strength
                 };
@@ -122,6 +207,8 @@ class ShearCalculator extends Component{
                 };
                 break;
             case 'combo':
+                //Get an array of the checkboxes selected.
+                //UPDATE: Checkbox should be a control component
                 addNewPipe = {
                 id: newId,
                 type: this.state.tubeType,
@@ -172,7 +259,7 @@ class ShearCalculator extends Component{
                             <Form.Group as={Row} controlId="tubeType">
                                 <Col sm="3"><Form.Label>Type</Form.Label></Col>
                                 <Col sm="8">
-                                    <Form.Control as="select" value={this.state.tubeType} onChange={e => this.setState( {tubeType: e.target.value})}>
+                                    <Form.Control as="select" value={this.state.tubeType} onChange={this.onTubeTypeChange}>
                                         <option value="pipe">pipe</option>                        
                                         <option value="casing">casing</option>
                                         <option value="tube">tube</option>
@@ -184,13 +271,14 @@ class ShearCalculator extends Component{
                                 </Col>
                                 <Col />
                             </Form.Group>
+                            { !this.state.strengthFieldHidden ? 
                             <Row>
                                 <Col sm="3">
                                 <Form.Group controlId="strengthType">
                                     <Form.Control as="select" onChange={this.onStrengthChange} value={this.state.strengthType}>
-                                        <option value="yield">Yield Strength</option>                        
-                                        <option value="grade">Grade</option>
-                                        <option value="breaking">Breaking Strength</option>                        
+                                        <option value="yield" disabled={this.state.ysDisabled}>Yield Strength</option>                        
+                                        <option value="grade" disabled={this.state.gradeDisabled}>Grade</option>
+                                        <option value="breaking" disabled={this.state.bsDisabled}>Breaking Strength</option>                        
                                     </Form.Control>
                                 </Form.Group>
                                 </Col>
@@ -204,41 +292,57 @@ class ShearCalculator extends Component{
                                     </Form.Group>
                                 </Col>
                                 <Col sm="1">{this.state.strUnits}</Col>
-                            </Row>
+                            </Row> : 
+                            null
+                            }
+                            { !this.state.odFieldHidden ? 
                             <Form.Group as={Row} controlId="outsideDiameter">
                                 <Form.Label column sm="3">OD</Form.Label>
                                 <Col sm="8">
                                 <Form.Control type="text" value={this.state.newOD} onChange={(e) => this.setState({newOD: e.target.value})}/>
                                 </Col>
                                 <Col sm="1">in</Col>
-                            </Form.Group>
+                            </Form.Group> :
+                            null 
+                            }
+                            { !this.state.elongationFieldHidden ? 
                             <Form.Group as={Row} controlId="elongation">
                                 <Form.Label column sm="3">Elongation</Form.Label>
                                 <Col sm="8">
                                 <Form.Control type="text" value={this.state.elongation} onChange={(e) => this.setState({elongation: e.target.value})}/>
                                 </Col>
                                 <Col sm="1">%</Col>
-                            </Form.Group>
+                            </Form.Group> :
+                            null
+                            }
+                            { !this.state.weightWallFieldHidden ? 
                             <Row>
-                                <Col sm="3">
-                                <Form.Group controlId="weightType">
-                                    <Form.Control as="select" onChange={this.onWeightChange} value={this.weightType}>
+                                
+                                <Form.Group as={Col} sm="3" controlId="weightType">
+                                    <Form.Control as="select" onChange={this.onWeightChange} value={this.state.weightType}>
                                         <option value="weight">Weight</option>                        
                                         <option value="wall">Wall thickness</option>                 
                                     </Form.Control>
+                                </Form.Group>                  
+                                <Form.Group  as={Col} sm="8" controlId="weightWall">
+                                    <Form.Control type="text" value={this.state.weight} onChange={ (e) => this.setState({weight: e.target.value})}/>
                                 </Form.Group>
-                                </Col>
-                                <Col sm="8">                    
-                                    <Form.Group controlId="weight">
-                                        <Form.Control type="text" />
-                                    </Form.Group>
-                                </Col>
                                 <Col sm="1">{this.state.weightUnits}</Col>
-                            </Row>
+                            </Row> :
+                            null
+                            }
+                            {!this.state.comboFieldHidden ?
                             <Row>
-                            <Col md="4"/>
-                            <Col md="4"><Button variant="primary" type="submit" onClick={this.addShearable}>Add</Button></Col>
-                            <Col md="4"/>
+                                <Form.Group  as={Col} md="12">
+                                    {this.state.pipes.map(pipe => (
+                                    <Form.Check inline label={pipe.id} type="checkbox" id={`combo-${pipe.id}`} key={`combo-${pipe.id}`}/>))}
+                                </Form.Group>
+                            </Row>: 
+                            null}
+                            <Row>
+                                <Col md="4"/>
+                                <Col md="4"><Button variant="primary" type="submit" onClick={this.addShearable}>Add</Button></Col>
+                                <Col md="4"/>
                             </Row>
                         </Form>
                     </NewPanel>
