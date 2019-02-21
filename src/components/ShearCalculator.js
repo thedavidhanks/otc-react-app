@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form'
 import NewPanel from './NewPanel.js';
 import PipesTable from './PipesTable.js';
+import SamplePipes from '../test/SamplePipes.js'  //loaded to test pipes
 
 function parentTubeType(childTube){
     var parentTube;
@@ -34,7 +35,7 @@ function parentTubeType(childTube){
 class ShearCalculator extends Component{
     constructor(props){
         super(props);
-        this.state = {
+        this.defaultFormState = {
             strUnits: 'ksi',
             strength: '',
             strengthType: 'yield',
@@ -45,49 +46,20 @@ class ShearCalculator extends Component{
             newOD: '',
             strengthFieldHidden: false,
             odFieldHidden: false,
+            elongationFieldHidden: false,
+            weightWallFieldHidden: false,
             comboFieldHidden: true,
             ysDisabled: false,
             gradeDisabled: false,
-            bsDisabled: true
+            bsDisabled: true,
+            comboBoxes: new Map()  
+        };
+        this.state = {
+            ...this.defaultFormState    //holds the state of the combo boxes { value: 'combo1', id: 1, checked: false }, { value: 'combo2', id: 2, checked: false }, 
         };
         //Below is a temporary pipes object for testing.
-        this.state.pipes = [
-            {
-                id: 1,
-                type: 'pipe',
-                OD: 5,
-                wall: 0.25,
-                ppf: 19.5,
-                strType: 'yield',
-                strength: 130
-            },{
-                id: 2,
-                type: 'pipe',
-                OD: 4.5,
-                wall: 0.2,
-                ppf: 10.5,
-                strType: 'yield',
-                strength: 130
-            },{
-                id: 3,
-                type: 'casing',
-                OD: 16,
-                wall: 0.2,
-                ppf: 25,
-                strType: 'grade',
-                strength: 85
-            },{
-                id: 4,
-                type: 'wireline',
-                OD: .75,
-                strType: 'breaking',
-                strength: 35
-            },{
-                id: 5,
-                type: 'combo',
-                combine: [1,3]
-            }    
-        ];
+        this.state.pipes = SamplePipes; //[];
+        this.state.pipes.map( (pipe) => this.state.comboBoxes.set(pipe.id, false) );
     };
 
     onStrengthChange = (event) => {
@@ -105,7 +77,7 @@ class ShearCalculator extends Component{
                 this.setState({strUnits: 'ksi'});
                 break;
         }
-    };
+    }
     onWeightChange = (event) => {
         var weightType = event.target.value;
         this.setState({weightType});
@@ -208,11 +180,14 @@ class ShearCalculator extends Component{
                 break;
             case 'combo':
                 //Get an array of the checkboxes selected.
-                //UPDATE: Checkbox should be a control component
+                let comboArray = [];
+                for( let [key, value] of this.state.comboBoxes ){
+                    if(value){ comboArray.push(key); }
+                }
                 addNewPipe = {
                 id: newId,
                 type: this.state.tubeType,
-                combine: [2,3]
+                combine: comboArray.sort()
                 };
                 break;
             default:
@@ -223,20 +198,23 @@ class ShearCalculator extends Component{
                 ...this.state.pipes,
                 addNewPipe
             ],
-            strUnits: 'ksi',
-            strength: '',
-            strengthType: 'yield',
-            weightUnits: 'in',
-            tubeType: 'pipe',
-            elongation: '',
-            newOD: ''
-            
+            ...this.defaultFormState
         });
-        
+        //create an empty checkbox
+        this.setState(prevState => ({ comboBoxes: prevState.comboBoxes.set(addNewPipe.id, false) }));
+
+        //return all the previous checkboxes to empty.
+        //this.state.comboBoxes.forEach( (value, key) => {this.state.comboBox.set(key, false)} ) );
+        //this.state.pipes.map( (pipe) => this.state.comboBoxes.set(pipe.id, false) );
         console.log(JSON.stringify(this.state.pipes));
     }
     onFormSubmit = (e) => {
         e.preventDefault();
+    }
+    handleComboChange = (e) => {
+        const itemNo = parseInt(e.target.name);
+        const isChecked = e.target.checked;
+        this.setState(prevState => ({ comboBoxes: prevState.comboBoxes.set(itemNo, isChecked) }));
     }
     render(){    
         return(
@@ -335,7 +313,7 @@ class ShearCalculator extends Component{
                             <Row>
                                 <Form.Group  as={Col} md="12">
                                     {this.state.pipes.map(pipe => (
-                                    <Form.Check inline label={pipe.id} type="checkbox" id={`combo-${pipe.id}`} key={`combo-${pipe.id}`}/>))}
+                                    <Form.Check inline label={pipe.id} type="checkbox" name={pipe.id} id={`combo-${pipe.id}`} key={`combo-${pipe.id}`} checked={this.state.comboBoxes.get(pipe.id)} onChange={this.handleComboChange}/>))}
                                 </Form.Group>
                             </Row>: 
                             null}
