@@ -8,7 +8,8 @@ import Form from 'react-bootstrap/Form'
 import _ from 'lodash';
 import NewPanel from './NewPanel.js';
 import PipesTable from './PipesTable.js';
-import SamplePipes from '../test/SamplePipes.js'  //loaded to test pipes
+import SamplePipes from '../test/SamplePipes.js';  //loaded to test pipes
+import RigProperties from './RigProperties.js';
 
 function parentTubeType(childTube){
     var parentTube;
@@ -355,8 +356,8 @@ class ShearCalculator extends Component{
                             </Row>
                         </Form>
                     </NewPanel>
+                    <RigProperties />
                     <NewPanel title="Well Conditions">x,y,z</NewPanel>
-                    <NewPanel title="Rig Properties"><div>here's some text about rig properties</div><div>blah. blah. blah.</div></NewPanel>
                     </Col>
                     <Col md={4}>
                         <NewPanel title="Shearables to Evaluate">
