@@ -159,7 +159,13 @@ class ShearCalculator extends Component{
         
         //create a new pipe object
         var addNewPipe = {};
-        var newId = this.state.pipes.length+1;
+        var highPipeId = 0;
+        
+        //determine the highest existing pipe ID
+        this.state.pipes.forEach( (pipe) =>{
+            highPipeId = pipe.id > highPipeId ? pipe.id : highPipeId;
+        });
+        var newId = highPipeId+1;//this.state.pipes.length+1;
         switch(this.state.tubeType){
             case 'pipe':
             case 'tube':
@@ -218,6 +224,16 @@ class ShearCalculator extends Component{
         _.forEach(updatedComboBoxes, (value,key) => {updatedComboBoxes[key] = false;});
         this.setState( {comboBoxes: updatedComboBoxes });        
         //console.log(JSON.stringify(this.state.pipes));
+    }
+    delShearable = (pipeObj) => {
+        //Given a pipe object remove it from the pipe array state object.
+        var pipesArray = this.state.pipes.slice();  //create a copy of the existing state.
+        var index = pipesArray.indexOf(pipeObj);
+        
+        pipesArray.splice(index,1);  //change the copy.
+        this.setState({
+            pipes: pipesArray  //set the state of pipes with the changed copy
+        });
     }
     onFormSubmit = (e) => {
         e.preventDefault();
@@ -344,9 +360,9 @@ class ShearCalculator extends Component{
                     </Col>
                     <Col md={4}>
                         <NewPanel title="Shearables to Evaluate">
-                            <PipesTable type="tube" pipes={this.state.pipes} />
-                            <PipesTable type="line" pipes={this.state.pipes} />
-                            <PipesTable type="combo" pipes={this.state.pipes} />
+                            <PipesTable type="tube" pipes={this.state.pipes} delShearable={this.delShearable}/>
+                            <PipesTable type="line" pipes={this.state.pipes} delShearable={this.delShearable} />
+                            <PipesTable type="combo" pipes={this.state.pipes} delShearable={this.delShearable} />
                         </NewPanel>
                     </Col>
                 </Row>

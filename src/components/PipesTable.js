@@ -33,58 +33,68 @@ function tubularsHasType(pipeArry,type){
 }
 
 const PipesTable = props => {
-    var returnTable = null;    
+    var returnTable=null, header=null, pipeRows = null, title=null;
     switch(props.type){
         case 'tube':
             if(tubularsHasType(props.pipes,'tube')){
-                returnTable = (
-                <Table striped hover>
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Eval Str</th>
-                      <th>OD</th>
-                      <th>Size</th>
-                    </tr>
-                  </thead>
-                  <PipeRows sort="tube" pipes={props.pipes}/>
-                </Table>);
+                title = "Tubulars";
+                header = (
+                    <thead>
+                        <tr  className="d-flex">
+                          <th className="col-1">#</th>
+                          <th className="col-4">Eval Str</th>
+                          <th className="col-3">OD</th>
+                          <th className="col-3">Size</th>
+                          <th className="col-1"></th>
+                        </tr>
+                      </thead>);
+                pipeRows = <PipeRows sort="tube" pipes={props.pipes} delShearable={props.delShearable}/>;
             }
             break;
         case 'line':
             if(tubularsHasType(props.pipes,'line')){
-            returnTable = (
-            <Table striped hover>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Breaking Strength</th>
-                  <th>OD</th>
-                </tr>
-              </thead>
-              <PipeRows sort="line" pipes={props.pipes}/>
-            </Table>);
+                title = "Lines";
+                header = (
+                    <thead>
+                        <tr className="d-flex">
+                          <th className="col-1">#</th>
+                          <th className="col-8">Breaking Strength</th>
+                          <th className="col-2">OD</th>
+                          <th className="col-1"></th>
+                        </tr>
+                      </thead>);
+                pipeRows = <PipeRows sort="line" pipes={props.pipes} delShearable={props.delShearable}/>;
             }
             break;
         case 'combo':
             if(tubularsHasType(props.pipes,'combo')){
-            returnTable = (
-            <Table striped hover>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Description</th>
-                </tr>
-              </thead>
-              <PipeRows sort="combo" pipes={props.pipes}/>
-            </Table>);
+                title="Combinations";
+                header = (
+                    <thead>
+                      <tr className="d-flex">
+                        <th className="col-1">#</th>
+                        <th className="col-10">Description</th>
+                        <th className="col-1"></th>
+                      </tr>
+                    </thead>);
+                pipeRows = <PipeRows sort="combo" pipes={props.pipes} delShearable={props.delShearable}/>;
             }
             break;
         default:
             break;
     }
+    if(header){
+        returnTable = (
+        <div>
+<h4>{title}</h4>
+        <Table striped hover size="sm">
+              {header}
+              {pipeRows}
+        </Table>
+        </div>
+        );
+    }
     return returnTable;
-        
 };
 
 export default PipesTable;
