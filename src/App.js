@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { auth, provider } from './firebase.js'
+
 import './App.css';
 import BSnavbar from './components/BSnavbar';
 import Rigs from './components/Rigs.js';

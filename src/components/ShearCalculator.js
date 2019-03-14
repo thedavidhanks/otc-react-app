@@ -10,6 +10,8 @@ import NewPanel from './NewPanel.js';
 import PipesTable from './PipesTable.js';
 import SamplePipes from '../test/SamplePipes.js';  //loaded to test pipes
 import RigProperties from './RigProperties.js';
+import ShearList from './ShearList.js';
+import AddPipeForm from './AddPipeForm.js';
 
 function parentTubeType(childTube){
     var parentTube;
@@ -151,9 +153,8 @@ class ShearCalculator extends Component{
             default:
                 break;
         }
-       
-        
     }
+    
     addShearable = (event) => {
         event.preventDefault();
         //Do some error checking
@@ -176,8 +177,6 @@ class ShearCalculator extends Component{
                 type: this.state.tubeType,
                 OD: this.state.newOD,
                 elongation: this.state.elongation,
-                //wall: 0.25,
-                //ppf: 19.5,
                 strType: 'yield',
                 strength: this.state.strength
                 };
@@ -264,7 +263,8 @@ class ShearCalculator extends Component{
                 </Row>
                 <Row>
                     <Col xs={12} md={8} >
-                    <NewPanel title="Shearables">
+                    <AddPipeForm />
+                    <NewPanel title="Shearables (react state)">
                         <Form onSubmit={this.onFormSubmit}>
                             <Form.Group as={Row} controlId="tubeType">
                                 <Col sm="3"><Form.Label>Type</Form.Label></Col>
@@ -365,6 +365,7 @@ class ShearCalculator extends Component{
                             <PipesTable type="line" pipes={this.state.pipes} delShearable={this.delShearable} />
                             <PipesTable type="combo" pipes={this.state.pipes} delShearable={this.delShearable} />
                         </NewPanel>
+                        <ShearList />
                     </Col>
                 </Row>
             </Container>
