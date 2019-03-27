@@ -138,6 +138,21 @@ const pipeFormReducer = (form = defaultFormState, action) => {
     switch(action.type){
         case 'ADD_PIPE_TO_LIST':
             //reset the form
+            //, but add an additional combobox for the new item
+            
+            //get the default form
+            formChanges = defaultFormState;
+            
+            //get existing comboboxes
+            //UPDATE - I suspect the combo box may not have been added when this is processed.
+            var existingComboBoxes = {...form.comboBoxes};
+            //reset all to false
+            for (let prop in existingComboBoxes){
+                existingComboBoxes[prop]=false;
+            }
+            
+            //add the existing combo boxes to the default form.
+            formChanges.comboBoxes = existingComboBoxes;
             
             
             break;

@@ -6,369 +6,43 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form'
 import _ from 'lodash';
+
 import NewPanel from './NewPanel.js';
 import PipesTable from './PipesTable.js';
-import SamplePipes from '../test/SamplePipes.js';  //loaded to test pipes
 import RigProperties from './RigProperties.js';
 import ShearList from './ShearList.js';
 import AddPipeForm from './AddPipeForm.js';
-
-function parentTubeType(childTube){
-    var parentTube;
-    switch(childTube){
-        case 'pipe':
-        case 'tube':
-        case 'casing':
-            parentTube = 'tube';
-            break;
-        case 'wireline':
-        case 'eline':
-        case 'slickline':
-            parentTube = 'line';
-            break;
-        case 'combo':
-            parentTube = 'combo';
-            break;
-        default:
-            parentTube = null;
-            break;
-    }
-    return parentTube;
-};
     
 class ShearCalculator extends Component{
     constructor(props){
         super(props);
-        this.defaultFormState = {
-            strUnits: 'ksi',
-            strength: '',
-            strengthType: 'yield',
-            weightType: 'wall',
-            weightUnits: 'in',
-            tubeType: 'pipe',
-            elongation: '',
-            newOD: '',
-            strengthFieldHidden: false,
-            odFieldHidden: false,
-            elongationFieldHidden: false,
-            weightWallFieldHidden: false,
-            comboFieldHidden: true,
-            ysDisabled: false,
-            gradeDisabled: false,
-            bsDisabled: true
-            //comboBoxes: {}
-        };
-        this.state = {
-            ...this.defaultFormState    //holds the state of the combo boxes { value: 'combo1', id: 1, checked: false }, { value: 'combo2', id: 2, checked: false }, 
-        };
         
-        this.state.pipes = SamplePipes; //[]; //SamplePipes object for testing.
-        
-        if(!_.isEmpty(this.state.pipes)){
-            let tempComboBoxes = {};   
-            this.state.pipes.map( (pipe) => tempComboBoxes[pipe.id] = false );
-            this.state.comboBoxes = tempComboBoxes; 
-        }else{
-            this.state.comboBoxes = {};
-        }
     };
-
-    onStrengthChange = (event) => {
-        var strengthType = event.target.value;
-        this.setState({strengthType});
-        switch(strengthType){
-            case 'grade':
-                this.setState({strUnits: ''});
-                break;
-            case 'breaking':
-                this.setState({strUnits: 'kips'});
-                break;
-            default:
-            case 'yield':
-                this.setState({strUnits: 'ksi'});
-                break;
-        }
-    }
-    onWeightChange = (event) => {
-        var weightType = event.target.value;
-        this.setState({weightType});
-        switch(weightType){
-            case 'weight':
-                this.setState({weightUnits: 'ppf'});
-                break;
-            default:
-            case 'wall':
-                this.setState({weightUnits: 'in'});
-                break;
-        }
-    }
-    onTubeTypeChange = (event) => {
-        //determine if type is line,tube, or combo
-        var parTubeType = parentTubeType(event.target.value);
-        this.setState( {tubeType: event.target.value});
-        
-        switch(parTubeType){
-            case 'line':
-                //if it's a line, select breaking strength type, disable other strenghts, hide elongatioin, hide weight/wall, hide combo selection
-                this.setState({
-                   strengthFieldHidden: false,
-                   odFieldHidden: false,
-                   elongationFieldHidden: true,
-                   weightWallFieldHidden: true,
-                   comboFieldHidden: true,
-                   strengthType: 'breaking',
-                   strUnits: 'kips',
-                   ysDisabled: true,
-                   gradeDisabled: true,
-                   bsDisabled: false
-                });
-                break;
-            case 'tube':
-                //if it's a tube, disable breaking strength, select yield strength, show elongatioin, show weight/wall, hide combo selection
-                this.setState({
-                   strengthFieldHidden: false,
-                   odFieldHidden: false,
-                   elongationFieldHidden: false,
-                   weightWallFieldHidden: false,
-                   comboFieldHidden: true,
-                   strengthType: 'yield',
-                   strUnits: 'ksi',
-                   ysDisabled: false,
-                   gradeDisabled: false,
-                   bsDisabled: true,
-                   weightType: 'wall',
-                   weightUnits: 'in'
-                });
-                break;
-            case 'combo':
-                //if it's a combo, hide strengths, hide elongation, hide weight/wall, show combo selection
-                this.setState({
-                   strengthFieldHidden: true,
-                   odFieldHidden: true,
-                   elongationFieldHidden: true,
-                   weightWallFieldHidden: true,
-                   comboFieldHidden: false
-                });
-                break;
-            default:
-                break;
-        }
-    }
-    
-    addShearable = (event) => {
-        event.preventDefault();
-        //Do some error checking
-        
-        //create a new pipe object
-        var addNewPipe = {};
-        var highPipeId = 0;
-        
-        //determine the highest existing pipe ID
-        this.state.pipes.forEach( (pipe) =>{
-            highPipeId = pipe.id > highPipeId ? pipe.id : highPipeId;
-        });
-        var newId = highPipeId+1;//this.state.pipes.length+1;
-        switch(this.state.tubeType){
-            case 'pipe':
-            case 'tube':
-            case 'casing':
-                addNewPipe = {
-                id: newId,
-                type: this.state.tubeType,
-                OD: this.state.newOD,
-                elongation: this.state.elongation,
-                strType: 'yield',
-                strength: this.state.strength
-                };
-                break;
-            case 'wireline':
-            case 'eline':
-            case 'slickline':
-                addNewPipe = {
-                id: newId,
-                type: this.state.tubeType,
-                strength: this.state.strength,
-                OD: this.state.newOD
-                };
-                break;
-            case 'combo':
-                //Get an array of the checkboxes selected.
-                let comboArray = [];
-                _.forEach(this.state.comboBoxes, (value,key) => {
-                    if(value){comboArray.push(key);}
-                });
-                
-                //created the combo object
-                addNewPipe = {
-                id: newId,
-                type: this.state.tubeType,
-                combine: comboArray.sort()
-                };
-                break;
-            default:
-                break;
-        }
-        this.setState({
-            pipes: [
-                ...this.state.pipes,
-                addNewPipe
-            ],
-            ...this.defaultFormState
-        });
-        
-        //create an empty checkbox
-        //get existing state and modify it
-        var updatedComboBoxes = {...this.state.comboBoxes};
-        updatedComboBoxes[addNewPipe.id] = false;
-        //sets all checkboxes to false;
-        _.forEach(updatedComboBoxes, (value,key) => {updatedComboBoxes[key] = false;});
-        this.setState( {comboBoxes: updatedComboBoxes });        
-        //console.log(JSON.stringify(this.state.pipes));
-    }
-    delShearable = (pipeObj) => {
-        //Given a pipe object remove it from the pipe array state object.
-        var pipesArray = this.state.pipes.slice();  //create a copy of the existing state.
-        var index = pipesArray.indexOf(pipeObj);
-        
-        pipesArray.splice(index,1);  //change the copy.
-        this.setState({
-            pipes: pipesArray  //set the state of pipes with the changed copy
-        });
-    }
-    onFormSubmit = (e) => {
-        e.preventDefault();
-    }
-    handleComboChange = (e) => {
-        const itemNo = parseInt(e.target.name);
-        const isChecked = e.target.checked;
-       
-        //get existing state and modify it
-        var updatedComboBoxes = {...this.state.comboBoxes};
-        updatedComboBoxes[itemNo] = isChecked;
-        this.setState( {comboBoxes: updatedComboBoxes });
-    }
     render(){    
-        return(
-            <Container fluid={true}>
-                <Row>
-                    <Col /><Col xs={12} md={6}><h4>Shear Calculator</h4></Col><Col />
-                </Row>
-                <Row>
-                    <Col xs={12}>
-                    <ButtonToolbar>
-                        <Button disabled variant="success" className='m-2'>New</Button>
-                        <Button disabled className='m-2'>Load</Button>
-                    </ButtonToolbar>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12} md={8} >
-                    <AddPipeForm />
-                    <NewPanel title="Shearables (react state)">
-                        <Form onSubmit={this.onFormSubmit}>
-                            <Form.Group as={Row} controlId="tubeType">
-                                <Col sm="3"><Form.Label>Type</Form.Label></Col>
-                                <Col sm="8">
-                                    <Form.Control as="select" value={this.state.tubeType} onChange={this.onTubeTypeChange}>
-                                        <option value="pipe">pipe</option>                        
-                                        <option value="casing">casing</option>
-                                        <option value="tube">tube</option>
-                                        <option value="wireline">wireline</option>
-                                        <option value="slickline">slickline</option>
-                                        <option value="eline">e-line</option>
-                                        <option value="combo">combo</option>
-                                    </Form.Control>
-                                </Col>
-                                <Col />
-                            </Form.Group>
-                            { !this.state.strengthFieldHidden ? 
-                            <Row>
-                                <Col sm="3">
-                                <Form.Group controlId="strengthType">
-                                    <Form.Control as="select" onChange={this.onStrengthChange} value={this.state.strengthType}>
-                                        <option value="yield" disabled={this.state.ysDisabled}>Yield Strength</option>                        
-                                        <option value="grade" disabled={this.state.gradeDisabled}>Grade</option>
-                                        <option value="breaking" disabled={this.state.bsDisabled}>Breaking Strength</option>                        
-                                    </Form.Control>
-                                </Form.Group>
-                                </Col>
-                                <Col sm="8">                    
-                                    <Form.Group controlId="Strength">
-                                        <Form.Control 
-                                            type="text" 
-                                            value={this.state.strength} 
-                                            onChange={(e) => this.setState({strength: e.target.value})}
-                                        />
-                                    </Form.Group>
-                                </Col>
-                                <Col sm="1">{this.state.strUnits}</Col>
-                            </Row> : 
-                            null
-                            }
-                            { !this.state.odFieldHidden ? 
-                            <Form.Group as={Row} controlId="outsideDiameter">
-                                <Form.Label column sm="3">OD</Form.Label>
-                                <Col sm="8">
-                                <Form.Control type="text" value={this.state.newOD} onChange={(e) => this.setState({newOD: e.target.value})}/>
-                                </Col>
-                                <Col sm="1">in</Col>
-                            </Form.Group> :
-                            null 
-                            }
-                            { !this.state.elongationFieldHidden ? 
-                            <Form.Group as={Row} controlId="elongation">
-                                <Form.Label column sm="3">Elongation</Form.Label>
-                                <Col sm="8">
-                                <Form.Control type="text" value={this.state.elongation} onChange={(e) => this.setState({elongation: e.target.value})}/>
-                                </Col>
-                                <Col sm="1">%</Col>
-                            </Form.Group> :
-                            null
-                            }
-                            { !this.state.weightWallFieldHidden ? 
-                            <Row>
-                                
-                                <Form.Group as={Col} sm="3" controlId="weightType">
-                                    <Form.Control as="select" onChange={this.onWeightChange} value={this.state.weightType}>
-                                        <option value="weight">Weight</option>                        
-                                        <option value="wall">Wall thickness</option>                 
-                                    </Form.Control>
-                                </Form.Group>                  
-                                <Form.Group  as={Col} sm="8" controlId="weightWall">
-                                    <Form.Control type="text" value={this.state.weight} onChange={ (e) => this.setState({weight: e.target.value})}/>
-                                </Form.Group>
-                                <Col sm="1">{this.state.weightUnits}</Col>
-                            </Row> :
-                            null
-                            }
-                            {!this.state.comboFieldHidden ?
-                            <Row>
-                                <Form.Group  as={Col} md="12">
-                                    {this.state.pipes.map(pipe => (
-                                    <Form.Check inline label={pipe.id} type="checkbox" name={pipe.id} id={`combo-${pipe.id}`} key={`combo-${pipe.id}`} checked={this.state.comboBoxes[pipe.id]} onChange={this.handleComboChange}/>))}
-                                </Form.Group>
-                            </Row>: 
-                            null}
-                            <Row>
-                                <Col md="4"/>
-                                <Col md="4"><Button variant="primary" type="submit" onClick={this.addShearable}>Add</Button></Col>
-                                <Col md="4"/>
-                            </Row>
-                        </Form>
-                    </NewPanel>
-                    <RigProperties />
-                    <NewPanel title="Well Conditions">x,y,z</NewPanel>
-                    </Col>
-                    <Col md={4}>
-                        <NewPanel title="Shearables to Evaluate">
-                            <PipesTable type="tube" pipes={this.state.pipes} delShearable={this.delShearable}/>
-                            <PipesTable type="line" pipes={this.state.pipes} delShearable={this.delShearable} />
-                            <PipesTable type="combo" pipes={this.state.pipes} delShearable={this.delShearable} />
-                        </NewPanel>
-                        <ShearList />
-                    </Col>
-                </Row>
-            </Container>
+    return(
+        <Container fluid={true}>
+            <Row>
+                <Col /><Col xs={12} md={6}><h4>Shear Calculator</h4></Col><Col />
+            </Row>
+            <Row>
+                <Col xs={12}>
+                <ButtonToolbar>
+                    <Button disabled variant="success" className='m-2'>New</Button>
+                    <Button disabled className='m-2'>Load</Button>
+                </ButtonToolbar>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={12} md={8} >
+                <AddPipeForm />
+                <RigProperties />
+                <NewPanel title="Well Conditions">x,y,z</NewPanel>
+                </Col>
+                <Col md={4}>
+                    <ShearList />
+                </Col>
+            </Row>
+        </Container>
     );
     };
 };
