@@ -4,20 +4,13 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Form from 'react-bootstrap/Form'
-import _ from 'lodash';
 
 import NewPanel from './NewPanel.js';
-import PipesTable from './PipesTable.js';
 import RigProperties from './RigProperties.js';
 import ShearList from './ShearList.js';
 import AddPipeForm from './AddPipeForm.js';
     
 class ShearCalculator extends Component{
-    constructor(props){
-        super(props);
-        
-    };
     render(){    
     return(
         <Container fluid={true}>

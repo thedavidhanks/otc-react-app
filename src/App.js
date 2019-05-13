@@ -15,15 +15,13 @@ import AccumCalc from './components/AccumCalc.js';
 class App extends Component {
     constructor(){
         super();
-        this.login = this.login.bind(this);
-        this.logout = this.logout.bind(this);
 
         this.state = {
             username: '',
             user: null
         };
     }
-    logout(){
+    logout = () => {
         console.log('logout'+this.state.user);
 
         auth.signOut()
@@ -33,7 +31,7 @@ class App extends Component {
                 });
              });
     }
-    login(){
+    login = () => {
         console.log('login',this.state.user);
         auth.signInWithPopup(provider)
                 .then((result) =>{

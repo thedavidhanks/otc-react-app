@@ -1,9 +1,13 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import Logo from '../img/logotoc.png';
+import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
+import Logo from '../img/logotoc.png'
+import { connect } from 'react-redux'
+import { signIn, signOut } from '../actions/authActions'
 
 class BSnavbar extends Component {
     render() {
+      const { auth } = this.props;
+      console.log(auth);
       return (
               <div className="navbar navbar-expand-md navbar-dark bg-dark fixed-top row">
                   <a className="navbar-brand" href="/"><img src={Logo} alt="otc-logo"/></a>
@@ -28,7 +32,7 @@ class BSnavbar extends Component {
                         </li>
                       </ul>
                       <div className=" my-2 my-lg-0">
-                      {this.props.user ? <button className="btn btn-outline-primary my-2 my-sm-0" type="submit" onClick={this.props.logout}>Logout</button> : <button className="btn btn-outline-primary my-2 my-sm-0" type="submit" onClick={this.props.login}>Login</button>}
+                      {auth.user ? <button className="btn btn-outline-primary my-2 my-sm-0" type="submit" onClick={this.props.signOut}>Logout</button> : <button className="btn btn-outline-primary my-2 my-sm-0" type="submit" onClick={this.props.signIn}>Login</button>}
                       </div>
                   </div>
               </div>
@@ -36,4 +40,18 @@ class BSnavbar extends Component {
     }
 };
 
-export default BSnavbar;
+const mapStateToProps = (state) => {
+    console.log(state);
+    return{
+        auth: state.firebase.auth
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return{
+    signIn: () => dispatch(signIn()),
+    signOut: () => dispatch(signOut())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BSnavbar);

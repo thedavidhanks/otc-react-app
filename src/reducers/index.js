@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
+import { firebaseReducer } from 'react-redux-firebase';
 import _ from 'lodash';
 
+import authReducer from './authReducer';
 import SamplePipes from '../test/SamplePipes.js';  //loaded to test pipes
 
 const defaultFormState = {
@@ -134,6 +136,7 @@ const pipesReducer = (pipelist = SamplePipes, action) => {
 const pipeFormReducer = (form = defaultFormState, action) => {
     //responsible for changing the state of the add pipe form
     let updatedForm = Object.assign({},form);  //"updatedForm" is created so as not to not modify "form".  
+    var formChanges = {};
     
     switch(action.type){
         case 'ADD_PIPE_TO_LIST':
@@ -160,7 +163,6 @@ const pipeFormReducer = (form = defaultFormState, action) => {
             //console.log(action.payload.target.value);
             var tubeType = action.payload.target.value;
             var parTubeType = parentTubeType(action.payload.target.value);
-            var formChanges = {};
             
             switch(parTubeType){
                 case 'line':
@@ -275,5 +277,7 @@ const pipeFormReducer = (form = defaultFormState, action) => {
 
 export default combineReducers({
     pipes: pipesReducer,
-    pipeForm: pipeFormReducer
+    pipeForm: pipeFormReducer,
+    firebase: firebaseReducer,
+    auth: authReducer
 })
