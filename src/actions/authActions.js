@@ -1,9 +1,9 @@
-import firebase, { provider } from '../firebase.js'
+import { provider } from '../firebase.js'
 
 
 export const signIn = () => {
-    return (dispatch, getState) =>{
-        
+    return (dispatch, getState, {getFirebase}) =>{
+        const firebase = getFirebase();
         firebase.auth().signInWithPopup(provider)
         .then((result) => {
             dispatch({
@@ -17,8 +17,8 @@ export const signIn = () => {
 };
 
 export const signOut = () => {
-    return (dispatch, getState) => {
-
+    return (dispatch, getState, {getFirebase}) => {
+        const firebase = getFirebase();
         firebase.auth().signOut().then(()=> {
             dispatch({type: 'SIGNOUT_SUCCESS'});
         });

@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import NewPanel from './NewPanel.js';
+import NewPanel from '../NewPanel.js';
 import PipesTable from './PipesTable';
-import { deletePipe } from '../actions';
+import { deletePipe } from '../../actions';
 
 const ShearList = (props) => {
     return (    

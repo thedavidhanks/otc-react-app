@@ -5,8 +5,8 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form'
 
-import NewPanel from './NewPanel.js';
-import { addPipe, tubeTypeChange, strengthChange, weightChange, strValueChange, odValueChange, elongValueChange, weightValueChange, handleComboChange } from '../actions';
+import NewPanel from '../NewPanel.js';
+import { addPipe, tubeTypeChange, strengthChange, weightChange, strValueChange, odValueChange, elongValueChange, weightValueChange, handleComboChange } from '../../actions';
 
 const AddPipeForm = (props) => {
     return (
