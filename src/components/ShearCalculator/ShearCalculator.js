@@ -15,7 +15,7 @@ class ShearCalculator extends Component{
     return(
         <Container fluid={true}>
             <Row>
-                <Col /><Col xs={12} md={6}><h4>Shear Calculator</h4></Col><Col />
+                <Col /><Col xs={12} md={6}><h4 className="text-center">Shear Calculator</h4></Col><Col />
             </Row>
             <Row>
                 <Col xs={12}>

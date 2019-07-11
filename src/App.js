@@ -7,6 +7,7 @@ import './App.css'
 import BSnavbar from './components/BSnavbar'
 import Rigs from './components/Rigs.js'
 import Projects from './components/Projects.js'
+import MockProjects from './components/MockProjects.js'
 import ShearCalculator from './components/ShearCalculator/ShearCalculator.js'
 import Tools from './components/Tools.js'
 import GasCalculatorMock from './components/GasCalculatorMock.js'
@@ -22,7 +23,11 @@ class App extends Component {
                 <BSnavbar/>
                 <div className="main">
                         <Route path='/' exact component={Home} />
-                        <Route path='/projects' component={Projects} />
+                        <Route
+                            path='/projects'
+                            render={()=><Projects auth ={this.props.auth} />}
+                        />
+                        <Route path='/mockprojects' component={MockProjects} />
                         <Route path='/rigs' component={Rigs} />
                         <Route
                             exact path ='/tools'
