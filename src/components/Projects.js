@@ -11,12 +11,15 @@ import IconSort from '../img/icons/baseline-sort-24px.svg';
 import IconFilter from '../img/icons/baseline-filter_list-24px.svg';
 
 import IconAdd from '../img/icons/baseline-add-24px.svg';
-import ModalAddRig from './ModalAddRig.js';
+import ModalAddProject from './Projects/ModalAddProject.js';
 import ProjectSummary from './Projects/ProjectSummary';
 
 class Projects extends Component {
-    state = {
-        projects: []
+    constructor(props){
+        super(props);
+        this.state = {
+            projects: []
+        };
     }
     componentDidMount(){
         axios.get('http://otc-scripts.herokuapp.com/projects/')
@@ -48,7 +51,7 @@ class Projects extends Component {
                                 null );
         return (
                 <Container  fluid={true}>
-                    <ModalAddRig />
+                    <ModalAddProject />
                     <Row>
                         <Col /><Col xs={12} md={6} className="text-center"><h4>Projects</h4></Col><Col />
                     </Row>
