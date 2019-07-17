@@ -58,14 +58,14 @@ class Projects extends Component {
                     <Row className='mb-2'>
                         <Col md={{span: 10, offset: 1}} sm={12}>
                         <ButtonToolbar className='float-sm-right'>
-                            <Button className="mx-1" data-toggle="collapse" data-target="#filterRigBox" ><img src={IconFilter} alt="filter" title='filter'/></Button>
-                            <Button className="mx-1" data-toggle="collapse" data-target="#sortRigBox" title='sort'><img src={IconSort} alt="sort" title="sort"/></Button>
+                            <Button className="mx-1" data-toggle="collapse" data-target="#filterProjectBox" ><img src={IconFilter} alt="filter" title='filter'/></Button>
+                            <Button className="mx-1" data-toggle="collapse" data-target="#sortProjectBox" title='sort'><img src={IconSort} alt="sort" title="sort"/></Button>
                             <Button className="mx-1" data-toggle="modal" data-target=".modal-add-rig"><img src={IconAdd} alt="add" title='add'/></Button>
                         </ButtonToolbar>
                         </Col>
                     </Row>
-                    <Row className='collapse' id="filterRigBox"><Col md={{span: 10, offset: 1}} sm={12}><p>filter options</p></Col></Row>
-                    <Row className='collapse' id="sortRigBox"><Col md={{span: 10, offset: 1}} sm={12}><p>sort options</p></Col></Row>
+                    <Row className='collapse' id="filterProjectBox"><Col md={{span: 10, offset: 1}} sm={12}><p>filter options</p></Col></Row>
+                    <Row className='collapse' id="sortProjectBox"><Col md={{span: 10, offset: 1}} sm={12}><p>sort options</p></Col></Row>
                     <Row>
                         <Col md={{span: 10, offset: 1}} sm={12}>
                             {projectList}

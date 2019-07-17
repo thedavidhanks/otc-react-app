@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
+//import firebase from 'firebase';
+import axios from 'axios';
 
 class ModalAddRig extends Component {
     constructor(props){
@@ -10,7 +11,7 @@ class ModalAddRig extends Component {
             commDate: '',
             type: ''
         };
-        
+        console.log(this.props.auth);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -27,16 +28,30 @@ class ModalAddRig extends Component {
     
     handleSubmit(event){
         event.preventDefault();
-        const db = firebase.firestore();
-        db.settings({
-            timestampsInSnapshots: true
-        });
-        db.collection("rigs").add({
+        //NO longer adding rig data to Firebase
+//        const db = firebase.firestore();
+//        db.collection("Rigs").add({
+//            name: this.state.name,
+//            owner: this.state.owner,
+//            commDate: this.state.commDate,
+//            type: this.state.type,
+//            addedBy: this.props.auth.email
+//        });
+        //post using axios.
+        axios.post('http://otc-scripts.herokuapp.com/rigs', {
+            action: 'add',
             name: this.state.name,
             owner: this.state.owner,
             commDate: this.state.commDate,
-            type: this.state.type
-        });
+            type: this.state.type,
+            user: this.props.auth
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
         this.setState({
             name: "",
             owner: "",
