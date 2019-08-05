@@ -52,7 +52,7 @@ class Rigs extends Component {
             
                 <ModalAddRig auth={this.props.auth}/>
                 <Row>
-                    <Col /><Col xs={12} md={6} className="text-center"><h4>Projects</h4></Col><Col />
+                    <Col /><Col xs={12} md={6} className="text-center"><h4>Rigs</h4></Col><Col />
                 </Row>
                 <Row className='mb-2'>
                     <Col md={{span: 10, offset: 1}} sm={12}>
