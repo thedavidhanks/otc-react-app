@@ -5,8 +5,9 @@ import { connect } from 'react-redux'
 
 import './App.css'
 import BSnavbar from './components/BSnavbar'
-import Rigs from './components/Rigs.js'
+import Rigs from './components/Rigs/Rigs.js'
 import Projects from './components/Projects.js'
+import MockProjects from './components/MockProjects.js'
 import ShearCalculator from './components/ShearCalculator/ShearCalculator.js'
 import Tools from './components/Tools.js'
 import GasCalculatorMock from './components/GasCalculatorMock.js'
@@ -22,8 +23,15 @@ class App extends Component {
                 <BSnavbar/>
                 <div className="main">
                         <Route path='/' exact component={Home} />
-                        <Route path='/projects' component={Projects} />
-                        <Route path='/rigs' component={Rigs} />
+                        <Route
+                            path='/projects'
+                            render={()=><Projects auth ={this.props.auth} />}
+                        />
+                        <Route path='/mockprojects' component={MockProjects} />
+                        <Route
+                            path='/rigs'
+                            render={()=><Rigs auth={this.props.auth} />}
+                        />
                         <Route
                             exact path ='/tools'
                             render={()=><Tools auth={this.props.auth} />}
@@ -55,17 +63,13 @@ class App extends Component {
             }
         });
     }
-}
+};
 const Home = () => <h3>Home</h3>;
-class ShearCalculatorPage extends Component{
-    render(){
-        return(
+const ShearCalculatorPage = (props) => (
         <div>
-            {this.props.auth.uid ? <ShearCalculator  auth={this.props.auth} /> : <h4>Login required to view this page</h4>}
+            {props.auth.uid ? <ShearCalculator  auth={props.auth} /> : <h4>Login required to view this page</h4>}
         </div>
         );
-    };
- };
 
  const mapStateToProps = (state) => {
  return {

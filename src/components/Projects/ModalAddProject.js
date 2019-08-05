@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 
-class ModalAddRig extends Component {
+class ModalAddProject extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -85,4 +85,4 @@ class ModalAddRig extends Component {
     }
 };
 
-export default ModalAddRig;
+export default ModalAddProject;

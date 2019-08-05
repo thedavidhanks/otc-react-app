@@ -1,13 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class NewPanel extends Component{
-    render(){
-        return(
-            <div className="new-panel">
-                <div className="new-panel-title"><h4>{this.props.title}</h4></div>
-                <div className="new-panel-content">{this.props.children}</div>
-            </div>
-    );}
+const NewPanel = (props) =>{
+    return(
+        <div className="new-panel">
+            <div className="new-panel-title"><h4>{props.title}</h4></div>
+            <div className="new-panel-content">{props.children}</div>
+        </div>
+    );
 };
 
 export default NewPanel;
