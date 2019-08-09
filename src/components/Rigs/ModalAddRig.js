@@ -38,7 +38,8 @@ class ModalAddRig extends Component {
 //            addedBy: this.props.auth.email
 //        });
         //post using axios.
-        axios.post('http://otc-scripts.herokuapp.com/rigs', {
+        //axios.post('http://otc-scripts/rigs', {  //For testing with local server
+        axios.post('https://otc-scripts.herokuapp.com/rigs/', {
             action: 'add',
             name: this.state.name,
             owner: this.state.owner,
@@ -47,6 +48,7 @@ class ModalAddRig extends Component {
             user: this.props.auth
           })
           .then(function (response) {
+            //UPDATE - if a rig is added, update the store.
             console.log(response);
           })
           .catch(function (error) {

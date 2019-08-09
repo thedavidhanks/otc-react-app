@@ -22,7 +22,7 @@ class Projects extends Component {
         };
     }
     componentDidMount(){
-        axios.get('http://otc-scripts.herokuapp.com/projects/')
+        axios.get('https://otc-scripts.herokuapp.com/projects/')
             .then(projects => {
                 console.log(projects);
                 this.setState({
