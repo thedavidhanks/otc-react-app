@@ -11,7 +11,6 @@ class ModalAddRig extends Component {
             commDate: '',
             type: ''
         };
-        console.log(this.props.auth);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }

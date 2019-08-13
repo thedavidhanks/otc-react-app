@@ -6,8 +6,8 @@ import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Table from 'react-bootstrap/Table';
 import axios from 'axios';
+import { connect } from 'react-redux';
 
-import IconSort from '../../img/icons/baseline-sort-24px.svg';
 import IconFilter from '../../img/icons/baseline-filter_list-24px.svg';
 import IconAdd from '../../img/icons/baseline-add-24px.svg';
 import ModalAddRig from './ModalAddRig.js';
@@ -17,7 +17,7 @@ import RigRow from'./RigRow';
 class Rigs extends Component {
     constructor(props){
         super(props);
-        //console.log(this.props.auth);
+        console.log(this.props.auth);
         //UPDATE - rig data should be stored in the redux store, so that is can easily be updated by the add rig form.
         this.state = {
             rigs: []
@@ -38,7 +38,9 @@ class Rigs extends Component {
         const rigList = rigs.length ? (
             rigs.map( rig => {
                 return (<RigRow 
-                            key={rig.id} 
+                            auth = {this.props.auth}
+                            key ={rig.id}
+                            id={rig.id} 
                             operator={rig.operator}
                             owner={rig.owner} 
                             name={rig.name} 
@@ -59,14 +61,13 @@ class Rigs extends Component {
                     <Col md={{span: 10, offset: 1}} sm={12}>
                     <ButtonToolbar className='float-sm-right'>
                         <Button className="mx-1" data-toggle="collapse" data-target="#filterRigBox" ><img src={IconFilter} alt="filter" title='filter'/></Button>
-                        <Button className="mx-1" data-toggle="collapse" data-target="#sortRigBox" title='sort'><img src={IconSort} alt="sort" title="sort"/></Button>
-                        <Button className="mx-1" data-toggle="modal" data-target=".modal-add-rig"><img src={IconAdd} alt="add" title='add'/></Button>
+                        <AddRigButton auth={this.props.auth} />
                     </ButtonToolbar>
                     </Col>
                 </Row>
                 <Row className='collapse' id="filterRigBox"><Col md={{span: 10, offset: 1}} sm={12}><p>filter options</p></Col></Row>
-                <Row className='collapse' id="sortRigBox"><Col md={{span: 10, offset: 1}} sm={12}><p>sort options</p></Col></Row>
                 <Row>
+                    <Col md={{span: 10, offset: 1}}>
                     <Table striped bordered hover>
                         <thead><tr>
                         <th scope='col'>Owner</th>
@@ -80,10 +81,24 @@ class Rigs extends Component {
                             {rigList}
                         </tbody>
                     </Table>
+                    </Col>
                 </Row>
             </Container>
         );
     }
 };
 
-export default Rigs;
+const AddRigButton = (props) => {
+    const authorizedUser = (props.auth.uid && props.auth.emailVerified);
+    return (
+        <Button className="mx-1" data-toggle="modal" data-target=".modal-add-rig" disabled={!authorizedUser}><img src={IconAdd} alt="add" title='add'/></Button>
+    );
+            
+};
+
+const mapStateToProps = (state) => {
+    return {
+        auth: state.firebase.auth
+    };
+ };
+export default connect(mapStateToProps)(Rigs);

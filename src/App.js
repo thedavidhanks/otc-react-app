@@ -28,10 +28,7 @@ class App extends Component {
                             render={()=><Projects auth ={this.props.auth} />}
                         />
                         <Route path='/mockprojects' component={MockProjects} />
-                        <Route
-                            path='/rigs'
-                            render={()=><Rigs auth={this.props.auth} />}
-                        />
+                        <Route path='/rigs' component={Rigs} />
                         <Route
                             exact path ='/tools'
                             render={()=><Tools auth={this.props.auth} />}
@@ -66,15 +63,15 @@ class App extends Component {
 };
 const Home = () => <h3>Home</h3>;
 const ShearCalculatorPage = (props) => (
-        <div>
-            {props.auth.uid ? <ShearCalculator  auth={props.auth} /> : <h4>Login required to view this page</h4>}
-        </div>
-        );
+    <div>
+        {props.auth.uid ? <ShearCalculator  auth={props.auth} /> : <h4>Login required to view this page</h4>}
+    </div>
+);
 
  const mapStateToProps = (state) => {
- return {
-     ...state.auth,
-     auth: state.firebase.auth
- }
- }
+    return {
+        ...state.auth,
+        auth: state.firebase.auth
+    };
+ };
 export default connect(mapStateToProps)(App);
