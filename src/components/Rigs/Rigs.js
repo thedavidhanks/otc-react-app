@@ -69,14 +69,20 @@ class Rigs extends Component {
                 <Row>
                     <Col md={{span: 10, offset: 1}}>
                     <Table striped bordered hover>
-                        <thead><tr>
-                        <th scope='col'>Owner</th>
-                        <th scope='col'>Name</th>
-                        <th scope='col'>type</th>
-                        <th scope='col'>last location</th>
-                        <th scope='col'>current operator</th>
-                        <th scope='col'>options</th>
-                        </tr></thead>
+                        <thead>
+                            <tr>
+                            <td>
+                            <Row>
+                                <Col>Owner</Col>
+                                <Col>Name</Col>
+                                <Col>type</Col>
+                                <Col>Location</Col>
+                                <Col>Operator</Col>
+                                <Col>Options</Col>
+                            </Row>
+                            </td>
+                            </tr>
+                        </thead>
                         <tbody>
                             {rigList}
                         </tbody>
