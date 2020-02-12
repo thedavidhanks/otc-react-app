@@ -13,7 +13,9 @@ import Tools from './components/Tools.js'
 import GasCalculatorMock from './components/GasCalculatorMock.js'
 import GasCalculator from './components/GasCalculator.js'
 import AccumCalc from './components/AccumCalc.js'
-import AddShearForm from './components/ShearReports/AddShearForm.js'
+import AddShearPressureForm from './components/ShearReports/AddShearPressureForm.js'
+import AddShearReportForm from './components/ShearReports/AddShearReportForm.js'
+import ShearSearch from './components/ShearReports/ShearSearch.js'
 
 class App extends Component {   
     render(){
@@ -42,11 +44,15 @@ class App extends Component {
                         <Route path='/tools/gascalctest' component={GasCalculator} />
                         <Route
                             path='/sheartests/add'
-                            render={ () => <AddShearForm auth={this.props.auth} />}
+                            render={ () => <AddShearReportForm auth={this.props.auth} />}
+                        />
+                        <Route
+                            path='/sheartests/addshear'
+                            render={ () => <AddShearPressureForm auth={this.props.auth} />}
                         />
                         <Route
                             path='/sheartests/search'
-                            render={ () => <div>Shear Shear Tests</div>}
+                            render={ () => <ShearSearch auth={this.props.auth} />}
                         />
                 </div>
             </div>

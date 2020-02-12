@@ -9,7 +9,8 @@ const config = {
     databaseURL: "https://otc-react-app.firebaseio.com",
     projectId: "otc-react-app",
     storageBucket: "otc-react-app.appspot.com",
-    messagingSenderId: "911289607073"
+    messagingSenderId: "911289607073",
+    appId: "1:911289607073:web:1108d4fffadd55e58261e0"
 };
 firebase.initializeApp(config);
 

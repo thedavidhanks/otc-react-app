@@ -35,7 +35,8 @@ class BSnavbar extends Component {
                         <li className="nav-item dropdown">
                           <NavLink className="nav-link dropdown-toggle" to="/sheartests" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" rel="noreferrer" activeClassName="active">Shear Tests</NavLink>
                           <div className="dropdown-menu" aria-labelledby="dropdown01">
-                            <NavLink className="dropdown-item" to="/sheartests/add" activeClassName="active">Add Document</NavLink>                    
+                            <NavLink className="dropdown-item" to="/sheartests/addshear" activeClassName="active">Add Shear</NavLink>                    
+                            <NavLink className="dropdown-item" to="/sheartests/add" activeClassName="active">Add Report</NavLink>                    
                             <NavLink className="dropdown-item" to="/sheartests/search" activeClassName="active">Search</NavLink>
                           </div>
                         </li>

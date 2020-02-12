@@ -10,53 +10,51 @@ import { connect } from 'react-redux';
 
 import IconFilter from '../../img/icons/baseline-filter_list-24px.svg';
 import IconAdd from '../../img/icons/baseline-add-24px.svg';
-import ModalAddRig from './ModalAddRig.js';
-import RigRow from'./RigRow';
+import ShearRow from'./ShearRow';
 //icons from https://material.io/tools/icons/?style=baseline
 
-class Rigs extends Component {
+class ShearSearch extends Component {
     constructor(props){
         super(props);
         console.log(this.props.auth);
         //UPDATE - rig data should be stored in the redux store, so that is can easily be updated by the add rig form.
         this.state = {
-            rigs: []
+            shears: []
         };
     }
     componentDidMount(){
-        axios.get('https://otc-scripts.herokuapp.com/rigs/')
-        //axios.get('http://localhost:8080/rigs/')
-            .then(rigs => {
-                //console.log(rigs);
+        axios.get('https://otc-scripts.herokuapp.com/shears/')
+        //axios.get('http://localhost:8080/shears/')
+            .then(shears => {
+                console.log(shears);
                 this.setState({
-                    rigs: rigs.data
+                    shears: shears.data
                 });
             });
     }
 
     render(){
-        const { rigs } = this.state;
-        const rigList = rigs.length ? (
-            rigs.map( rig => {
-                return (<RigRow 
+        const { shears } = this.state;
+        const shearList = shears.length ? (
+            shears.map( shear => {
+                return (<ShearRow 
                             auth = {this.props.auth}
-                            key ={rig.id}
-                            id={rig.id} 
-                            operator={rig.operator}
-                            owner={rig.owner} 
-                            name={rig.name} 
-                            loc='GOM' 
-                            type={rig.type} />);
+                            key ={shear.id}
+                            id={shear.id} 
+                            shear_pressure={shear.shear_pressure}
+                            bop_oem={shear.name} 
+                            bop_model={shear.BOP_model} 
+                            pipe_grade={shear.grade} 
+                            pipe_od={shear.od}
+                            pipe_weight={shear.weight} />);
             })
             ):(
-            <tr><td colSpan="6">Loading...</td></tr> );
+            <tr><td colSpan="7">Loading...</td></tr> );
     
         return (
             <Container  fluid={true}>    
-            
-                <ModalAddRig auth={this.props.auth}/>
                 <Row>
-                    <Col /><Col xs={12} md={6} className="text-center"><h4>Rigs</h4></Col><Col />
+                    <Col /><Col xs={12} md={6} className="text-center"><h4>Shears</h4></Col><Col />
                 </Row>
                 <Row className='mb-2'>
                     <Col md={{span: 10, offset: 1}} sm={12}>
@@ -74,18 +72,19 @@ class Rigs extends Component {
                             <tr>
                             <td>
                             <Row>
-                                <Col>Owner</Col>
-                                <Col>Name</Col>
-                                <Col>type</Col>
-                                <Col>Location</Col>
-                                <Col>Operator</Col>
-                                <Col>Options</Col>
+                                <Col><b>BOP OEM</b></Col>
+                                <Col><b>BOP model</b></Col>
+                                <Col><b>OD</b></Col>
+                                <Col><b>weight</b></Col>
+                                <Col><b>grade</b></Col>
+                                <Col><b>shear pressure</b></Col>
+                                <Col></Col> 
                             </Row>
                             </td>
                             </tr>
                         </thead>
                         <tbody>
-                            {rigList}
+                            {shearList}
                         </tbody>
                     </Table>
                     </Col>
@@ -108,4 +107,4 @@ const mapStateToProps = (state) => {
         auth: state.firebase.auth
     };
  };
-export default connect(mapStateToProps)(Rigs);
+export default connect(mapStateToProps)(ShearSearch);
