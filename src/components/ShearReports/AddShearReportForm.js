@@ -6,8 +6,11 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import firebase from '../../firebase.js'
+import axios from 'axios'
 
 import NewPanel from '../NewPanel'
+
+const host = "https://otc-scripts.herokuapp.com"; //http://localhost:8080";
 
 class AddShearForm extends Component{
     constructor(props){
@@ -17,12 +20,20 @@ class AddShearForm extends Component{
             title: '',
             releaseDate: '',
             fileDescription: '',
-            bopOEM: '',
-            bopDescription: '',
             docOwner: '',
             progress: 0,
-            url: ''
+            url: '',
+            reportingCompanies: [{id: "1", name: "Looking..."}],
+            docID: null
         };
+    }
+    componentDidMount(){
+        axios.get(host + '/shears?options=tests')
+            .then(cos => {
+                this.setState({
+                    reportingCompanies: cos.data
+                })
+            });
     }
     handleChange = (e) => {
         //notes and type for new markers are attached to markerPopup and should be handled differently.
@@ -34,32 +45,42 @@ class AddShearForm extends Component{
         this.setState({
             [e.target.id]: e.target.value
         });
-        
-        // Create a reference to the storage file location
-        // TODO: get the next report id # from mysql database.
-        var storageRef = firebase.storage().ref('shear_reports/' + '1.pdf');
         const file = e.target.files[0];
-        var task = storageRef.put(file);
         
-        task.on('state_changed', 
-            (snapshot) => {
-                var percentUpload = 100 * (snapshot.bytesTransferred/
-                        snapshot.totalBytes);
-                this.setState({progress: percentUpload});
-            },
-            (err) => {
-                console.log(err);
-            },
-            () => {
-                // TODO update state of download url
-                storageRef.getDownloadURL()
-                    .then(url => {
-                      this.setState({ url });
-                    });
-                console.log(this.state.url);
-            }
-        )
-       
+        // Get the next report id # from mysql database.
+        axios.get(host + '/shears?options=getnew')
+            .then(doc => {
+                console.log(doc);
+                this.setState({
+                    docID: doc.data[0].id
+                });
+            }).then( () => {
+                var storageRef = firebase.storage().ref('shear_reports/' + this.state.docID +'.pdf');
+                console.log(storageRef);
+                var task = storageRef.put(file);
+
+                task.on('state_changed', 
+                    (snapshot) => {
+                        var percentUpload = 100 * (snapshot.bytesTransferred/
+                                snapshot.totalBytes);
+                        this.setState({progress: percentUpload});
+                    },
+                    (err) => {
+                        console.log(err);
+                    },
+                    () => {
+                        // TODO update state of download url
+                        storageRef.getDownloadURL()
+                            .then(url => {
+                              this.setState({ url });
+                            });
+                        console.log(this.state.url);
+                    }
+                );                
+            });
+            
+        // Create a reference to the storage file location
+
     }
         
     handleSubmit = (e) =>{
@@ -68,12 +89,42 @@ class AddShearForm extends Component{
         //validate form
 
         //send fields to axios
-
+        axios.post(host + '/shears?options=updatenew', {
+            action: 'add',
+            docID: this.state.docID,
+            title: this.state.title,
+            releaseDate: this.state.releaseDate,
+            fileDescription: this.state.fileDescription,
+            docOwner: this.state.docOwner,
+            url: this.state.url
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        this.setState({
+            docID: '',
+            releaseDate: '',
+            title: '',
+            fileDescription: '',
+            docOwner: '',
+            url: '',
+            fileLocation: ''
+        });
         //provide success/fail message
         
         //on success send user to shear test list.
     }
     render(){
+        const { reportingCompanies } = this.state;
+        const companyList = reportingCompanies.length ? (
+                                reportingCompanies.map( company => {
+                                    return (<option key={company.id} value={company.id}>{company.name}</option>);
+                                })
+                                ):(
+                                null );
         return(    
         <Container>
             <Row>
@@ -91,7 +142,9 @@ class AddShearForm extends Component{
                     </Form.Group>
                     <Form.Group controlId="docOwner">
                         <Form.Label>Company reporting</Form.Label>
-                        <Form.Control value={this.state.docOwner} onChange={this.handleChange}/>
+                        <Form.Control as="select" value={this.state.docOwner} onChange={this.handleChange}>
+                            {companyList}
+                        </Form.Control>
                     </Form.Group>
                     <Form.Group controlId='fileDescription'>
                         <Form.Label>Test Description</Form.Label>
